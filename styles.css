@@ -126,6 +126,7 @@ body {
   grid-column-end: 5;
 }
 
+/*
 .form-input,
 .form-submit {
   display: none;
@@ -158,7 +159,7 @@ body {
   color: var(--background);
 }
 
-/* Updated for my purpose, but kinda borrowed code */
+Updated for my purpose, but kinda borrowed code
 .list-choice {
   width: 40%;
   position: relative;
@@ -239,7 +240,69 @@ body {
   max-height: 540px;
 }
 
-/* This is my code again */
+This is my code again
+*/
+
+/********* NEW VERSION **********/
+
+.search__container {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#search__form__input {
+  display: block;
+  width: 100%;
+  height: 33%;
+  align-self: flex-start;
+  margin: 0;
+  padding: 0 15px;
+  border-radius: 25px 25px 0 0;
+  border: 1px solid var(--gray-two);
+}
+
+input[type="radio"] {
+  visibility: hidden;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+}
+
+input[type="radio"]:checked + label {
+  background-color: var(--secondary);
+  cursor: pointer;
+}
+
+input[type="radio"] + label {
+  padding: 2%;
+  border-radius: 25px;
+}
+
+input[type="radio"] + label:hover {
+  cursor: pointer;
+}
+
+.search__options {
+  display: flex;
+  height: 33%;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#search__form__submit {
+  width: 100%;
+  align-self: flex-end;
+  height: 33%;
+  border-radius: 0 0 25px 25px;
+  border: 1px solid var(--gray-two);
+  cursor: pointer;
+}
+
+#search__form__submit:hover {
+  background-color: var(--secondary);
+}
 
 /************************** NEWS WIDGET **************************/
 

@@ -22,7 +22,7 @@ if (window.localStorage.length > 0) {
     : (profileSettings.measurement = "metric");
 }
 
-//////////////////////////////////////  WEATHER TAB  //////////////////////////////////////
+/////////////////////////////////////  WEATHER WIDGET  /////////////////////////////////////
 
 // Weather DOM Selectors
 const weatherLoc = document.querySelector(".weather__loc");
@@ -47,6 +47,7 @@ const updateWeather = function () {
     });
 };
 
+////////////////////////////////////// CRYPTO WIDGET  //////////////////////////////////////
 // Currency API Data
 const allCryptos = [];
 
@@ -93,17 +94,21 @@ const updateCrypto = function () {
   }
 };
 
+//////////////////////////////////////  SEARCH WIDGET  //////////////////////////////////////
+
+//////////////// OLD VERSION /////////////
+/*
 // Search Section
 const search = [
-  { name: "tiktok", url: "https://www.tiktok.com/search/video", query: "q" },
+  { name: "tiktok", url: "https://www.tiktok.com/search/video?q", query: "q" },
   {
     name: "youtube",
-    url: "https://www.youtube.com/results",
+    url: "https://www.youtube.com/results?search_query",
     query: "search_query",
   },
-  { name: "google", url: "https://www.google.com/search", query: "q" },
-  { name: "wiki", url: "https://en.wikipedia.org/wiki/", query: "search" },
-  { name: "reddit", url: "https://www.reddit.com/search", query: "q" },
+  { name: "google", url: "https://www.google.com/search?q", query: "q" },
+  { name: "wiki", url: "https://en.wikipedia.org/wiki?search", query: "search" },
+  { name: "reddit", url: "https://www.reddit.com/search?q", query: "q" },
 ];
 
 // Search DOM Selectors
@@ -143,6 +148,39 @@ searchBtn.addEventListener("click", () => {
     targetUrl = `${targetSearch.url}?${targetSearch.query}=${formInput.value}`;
     window.open(targetUrl, "_blank");
   }
+});
+*/
+
+////////////////// NEW VERSION //////////////////
+// DOM Selectors
+let searchInput = document.getElementById("search__form__input");
+const searchSubmit = document.getElementById("search__form__submit");
+
+// Disable ability to search without any query
+searchSubmit.disabled = true;
+
+// Allow user to search with at least one character in query
+searchInput.addEventListener("input", function () {
+  // Global selector has been set on page loading, so I need to update it
+  searchInput = document.getElementById("search__form__input");
+
+  if (searchInput.value.length === 0) {
+    searchSubmit.disabled = true;
+  } else if (searchInput.value.length > 0) {
+    searchSubmit.disabled = false;
+  }
+});
+
+searchSubmit.addEventListener("click", function () {
+  // Selecting only checked option
+  const searchCheckedOption = document.querySelector(
+    'input[name="search__option"]:checked'
+  );
+
+  const targetUrl = `${searchCheckedOption.getAttribute("data-url")}${
+    searchInput.value
+  }`;
+  window.open(targetUrl, "_blank");
 });
 
 ////////////////////////////// TODO WIDGET /////////////////////////////
@@ -263,7 +301,7 @@ newsList.addEventListener("click", function (e) {
   clickedNews.querySelector(".news-additional").classList.toggle("hidden");
 });
 
-///////////////////////////////////////////  INIT  ///////////////////////////////////////////
+//////////////////////////////////////////  INIT  //////////////////////////////////////////
 
 const init = function () {
   const thingsToRemove = [
