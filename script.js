@@ -95,63 +95,6 @@ const updateCrypto = function () {
 };
 
 //////////////////////////////////////  SEARCH WIDGET  //////////////////////////////////////
-
-//////////////// OLD VERSION /////////////
-/*
-// Search Section
-const search = [
-  { name: "tiktok", url: "https://www.tiktok.com/search/video?q", query: "q" },
-  {
-    name: "youtube",
-    url: "https://www.youtube.com/results?search_query",
-    query: "search_query",
-  },
-  { name: "google", url: "https://www.google.com/search?q", query: "q" },
-  { name: "wiki", url: "https://en.wikipedia.org/wiki?search", query: "search" },
-  { name: "reddit", url: "https://www.reddit.com/search?q", query: "q" },
-];
-
-// Search DOM Selectors
-const formInput = document.querySelector("#form-input");
-const searchBtn = document.querySelector("#form-submit");
-const radioOption = document.querySelectorAll("input[type='radio']");
-const list = document.querySelector(".list-choice-objects");
-
-// CSS function to show input and button once one of the radials was selectod
-const showInputForm = function () {
-  formInput.classList.remove("form-input");
-  searchBtn.classList.remove("form-submit");
-
-  formInput.classList.add("form-input_active");
-  searchBtn.classList.add("form-submit_active");
-};
-
-// Defining some global variables to avoid multiple values for the target of button event
-let target;
-let targetUrl;
-
-// Event listener for the radio buttons
-list.addEventListener("change", function (e) {
-  showInputForm();
-  target = e.target.value;
-});
-
-// Event listener for the pseudo submit button
-searchBtn.addEventListener("click", () => {
-  if (target === "everywhere") {
-    for (let i = 0; i < search.length; i++) {
-      targetUrl = `${search[i].url}?${search[i].query}=${formInput.value}`;
-      window.open(targetUrl, "_blank");
-    }
-  } else {
-    const targetSearch = search.find((el) => el.name === target);
-    targetUrl = `${targetSearch.url}?${targetSearch.query}=${formInput.value}`;
-    window.open(targetUrl, "_blank");
-  }
-});
-*/
-
-////////////////// NEW VERSION //////////////////
 // DOM Selectors
 let searchInput = document.getElementById("search__form__input");
 const searchSubmit = document.getElementById("search__form__submit");
@@ -184,71 +127,41 @@ searchSubmit.addEventListener("click", function () {
 });
 
 ////////////////////////////// TODO WIDGET /////////////////////////////
+const todoList = document.querySelector(".todo__list");
 
-// Selecting DOM elements
-const todoBtn = document.querySelector(".todo-form-btn");
-const todoClearBtn = document.querySelector(".todo-btn");
-
-const todoList = document.querySelector(".todo-list");
-const todoInput = document.querySelector(".todo-form-input");
-const todoForm = document.querySelector(".todo-form");
-const clearWarning = document.querySelector(".todo-clear-warning");
-
-// Adding new task
-todoForm.addEventListener("submit", function (e) {
-  e.preventDefault;
-  if (!todoInput.value) return;
-  todoList.insertAdjacentHTML(
-    "afterbegin",
-    `<div class="todo-item"><p>${todoInput.value}</p><div class="delete-todo-item"></div></div>`
-  );
-  todoInput.value = "";
-});
-
-// Just a few helper functions to show or hide warning window
-const showWarning = function () {
-  todoList.style.display = "none";
-  todoForm.style.display = "none";
-  clearWarning.style.display = "grid";
-};
-
-const hideWarning = function () {
-  todoList.style.display = "flex";
-  todoForm.style.display = "block";
-  clearWarning.style.display = "none";
-};
-
-// Clearing the list
-todoClearBtn.addEventListener("click", function () {
-  showWarning();
-});
-
-// Clearing the list of items by one button
-clearWarning.addEventListener("click", function (e) {
-  const pressedBtn = e.target.classList.value;
-  if (pressedBtn.includes("yes")) {
-    const allTodos = document.querySelectorAll(".todo-item");
-    for (todo of allTodos) {
-      todo.remove();
-      hideWarning();
-    }
-  } else if (pressedBtn.includes("no")) {
-    hideWarning();
-  } else {
-    return;
-  }
-});
-
-// Crossing list item aka "done" or deleting selected item
 todoList.addEventListener("click", function (e) {
-  const item = e.target.closest(".todo-item");
+  const clicked = e.target.classList.value;
 
-  if (!item) return;
-  else if (e.target.classList.value.includes("delete")) {
-    item.remove();
-  } else {
-    item.classList.toggle("todo-item-crossed");
+  if (clicked === "todo__list") {
+    return;
+  } else if (clicked.includes("delete")) {
+    e.target.closest(".todo__item").remove();
+  } else if (clicked.includes("todo__item")) {
+    e.target.classList.toggle("todo__item--crossed");
+  } else if (!clicked.includes("todo__item")) {
+    e.target.closest(".todo__item").classList.toggle("todo__item--crossed");
   }
+});
+
+const todoForm = document.querySelector(".todo__form");
+
+todoForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const todoInput = document.querySelector(".todo__form__input");
+  const todoMarkup = `
+    <div class="todo__item">
+      <p class="todo__text">${todoInput.value}</p>
+      <button class="todo__delete">&#9587;</button>
+    </div>
+  `;
+
+  if (!todoInput.value) return;
+
+  todoList.insertAdjacentHTML("beforeend", todoMarkup);
+
+  todoInput.value = "";
+  todoInput.focus();
 });
 
 /////////////////////////////////// NEWS WIDGET ///////////////////////////////////

@@ -124,128 +124,6 @@ body {
   overflow: visible;
   grid-column-start: 3;
   grid-column-end: 5;
-}
-
-/*
-.form-input,
-.form-submit {
-  display: none;
-}
-
-.form-input_active {
-  display: inline-block;
-  font-size: 1.2rem;
-  color: var(--primary);
-  width: 90%;
-  height: 25%;
-  border: 3px solid var(--secondary);
-  border-radius: 10px;
-}
-
-.form-submit_active {
-  display: inline-block;
-  width: 40%;
-  padding: 0.55em 1em;
-  box-sizing: border-box;
-  cursor: pointer;
-  background: var(--gray-two);
-  border-radius: 0.2em;
-  border-color: var(--gray-two);
-  border-style: solid;
-}
-
-.form-submit_active:hover {
-  background: var(--secondary);
-  color: var(--background);
-}
-
-Updated for my purpose, but kinda borrowed code
-.list-choice {
-  width: 40%;
-  position: relative;
-  cursor: pointer;
-}
-
-.list-choice input[type="radio"] {
-  display: none;
-}
-
-.list-choice-title {
-  width: 100%;
-  display: block;
-  background: var(--gray-one);
-  text-align: center;
-  padding: 0.55em 1em;
-  box-sizing: border-box;
-  color: var(--background);
-  border-radius: 0.2em;
-}
-
-.list-choice:hover .list-choice-title {
-  border-radius: 0.2em 0.2em 0 0;
-}
-
-.list-choice-objects label:nth-last-of-type(1) span {
-  border-radius: 0 0 0.2em 0.2em;
-}
-.list-choice input[type="radio"] + span {
-  color: var(--background);
-  background: (var(--gray-two));
-  padding: 0.55em 1em;
-  display: block;
-  text-align: center;
-  box-sizing: border-box;
-  cursor: pointer;
-  width: 100%;
-}
-.list-choice-objects {
-  position: absolute;
-  top: 0;
-  padding-top: 2.1em;
-  box-sizing: border-box;
-  width: 100%;
-  overflow: hidden;
-  max-height: 0;
-  transition: all 250ms ease;
-}
-.list-choice:hover .list-choice-objects input[type="radio"] + span {
-  position: relative;
-  top: 0;
-  transition: all 250ms ease-in-out;
-}
-.list-choice:hover input[type="radio"] + span:hover {
-  background: var(--gray-two);
-}
-.list-choice:hover input[type="radio"]:checked + span:hover {
-  background: var(--secondary);
-}
-.list-choice input[type="radio"]:checked + span {
-  background: var(--secondary);
-  position: absolute;
-  top: 0em;
-  border-radius: 0.2em;
-}
-.list-choice:hover input[type="radio"]:checked + span {
-  border-radius: 0;
-}
-.list-choice:hover
-  .list-choice-objects
-  label:nth-last-of-type(1)
-  input[type="radio"]:checked
-  + span {
-  border-radius: 0 0 0.2em 0.2em;
-}
-
-.list-choice:hover .list-choice-objects {
-  max-height: 540px;
-}
-
-This is my code again
-*/
-
-/********* NEW VERSION **********/
-
-.search__container {
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -281,6 +159,7 @@ input[type="radio"] + label {
 
 input[type="radio"] + label:hover {
   cursor: pointer;
+  background-color: var(--gray-two);
 }
 
 .search__options {
@@ -298,6 +177,12 @@ input[type="radio"] + label:hover {
   border-radius: 0 0 25px 25px;
   border: 1px solid var(--gray-two);
   cursor: pointer;
+}
+
+#search__form__submit:disabled:hover {
+  background-color: var(--gray-two);
+  opacity: 70%;
+  cursor: not-allowed;
 }
 
 #search__form__submit:hover {
@@ -385,82 +270,68 @@ input[type="radio"] + label:hover {
 }
 
 /************************** TODO WIDGET **************************/
-.todo {
+.todo__container {
   grid-row-start: 2;
   grid-row-end: 4;
   grid-column-start: 3;
   grid-column-end: 5;
 }
 
-.todo-item {
+.todo__item {
   width: 90%;
-  min-height: 10%;
-  background-color: var(--gray-one);
-  padding: 0;
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
+  background-color: var(--background);
   border-radius: 25px;
-  position: relative;
-  transition: 0.2s ease-in-out;
-  z-index: 1;
+  margin-top: 2%;
+  display: grid;
+  grid-template-columns: 90% 10%;
+  cursor: pointer;
 }
 
-.todo-item-crossed {
+.todo__item--crossed {
   text-decoration: line-through;
-  order: 1;
-  align-self: flex-start;
-  left: 5%;
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--secondary);
   color: var(--gray-three);
+  background-color: var(--gray-two);
 }
 
-.todo-item:hover {
-  background-color: var(--secondary);
-  cursor: pointer;
+.todo__item--crossed button {
+  text-decoration: none;
+}
+
+.todo__text {
+  margin-left: 3%;
+}
+
+.todo__delete {
+  height: 2rem;
+  width: 2rem;
+  padding: 0;
+  margin: 0;
   border-radius: 25px;
+  border: 0;
+  justify-self: center;
+  align-self: center;
+  background-color: var(--gray-two);
 }
 
-.todo-item p {
-  display: flex;
-  flex-wrap: wrap;
-  word-wrap: break-word;
-  margin: 1% 0;
-  padding: 0 20px;
-  width: 90%;
-  height: 100%;
-  align-content: center;
-  border-radius: 25px;
-  position: relative;
-  right: 0.5%;
-}
-
-.delete-todo-item {
-  background-color: var(--secondary);
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 25px;
-  position: absolute;
-  right: 2.5%;
-  transition: 0.15s ease-in-out;
-}
-
-.delete-todo-item:hover {
-  width: 1.7rem;
-  height: 1.7rem;
+.todo__delete:hover {
   background-color: var(--bad);
+  opacity: 95%;
   cursor: pointer;
 }
 
-.todo-list {
+.todo__list {
   height: 80%;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  overflow: scroll;
 }
 
-.todo-form {
+.todo__form {
   width: 100%;
   height: 20%;
   box-sizing: border-box;
@@ -468,7 +339,7 @@ input[type="radio"] + label:hover {
   padding: 0;
 }
 
-.todo-form input {
+.todo__form input {
   border: 0;
   width: calc(100% - 20px);
   margin-right: 0;
@@ -477,7 +348,7 @@ input[type="radio"] + label:hover {
   padding-right: 0;
 }
 
-.todo-form button {
+.todo__form button {
   border: 0;
   margin: 0;
   padding: 0;
@@ -485,54 +356,10 @@ input[type="radio"] + label:hover {
   width: 50%;
 }
 
-.todo-form button:hover {
-  background-color: var(--secondary);
+.todo__form button:hover {
+  background-color: var(--gray-two);
   cursor: pointer;
 }
-
-.todo-clear-warning {
-  height: 80%;
-  width: 80%;
-  background-color: var(--background);
-  border-radius: 25px;
-  margin: auto;
-  display: none;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: 80% 20%;
-  align-items: center;
-  justify-items: center;
-}
-
-.todo-clear-warning p {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  grid-column-start: 1;
-  grid-column-end: 3;
-}
-
-.todo-clear-warning button {
-  display: inline-block;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.warning-yes {
-  border-radius: 0 0 0 25px;
-}
-
-.warning-no {
-  border-radius: 0 0 25px 0;
-}
-
-.todo-clear-warning button:hover {
-  background-color: var(--secondary);
-  cursor: pointer;
-}
-
 /************************** BUTTONS **************************/
 
 .button {
@@ -559,6 +386,7 @@ input[type="radio"] + label:hover {
   position: absolute;
   margin-right: 30px;
   border-radius: 25px;
+  z-index: 2;
 }
 
 .settings__el {
