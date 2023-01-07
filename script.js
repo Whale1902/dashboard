@@ -390,6 +390,7 @@ const tokenCheckBtn = document.querySelector(".settings__coins__check");
 
 const coinsInputArr = [coin1Input, coin2Input, coin3Input];
 
+/*
 tokenCheckBtn.addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -420,6 +421,37 @@ tokenCheckBtn.addEventListener("click", function (e) {
       }
     });
 });
+*/
+
+// Fetching CoinGecko just once, so that I don't need to call it on every time user fire 'change' or 'input' event
+let listOftokens = fetch("https://api.coingecko.com/api/v3/coins/list")
+  .then((res) => res.json())
+  .catch((err) => console.error(err));
+
+// Checking if passed input have valid value
+// (if token is listed on CoinGecko)
+const checkToken = function (input) {
+  listOftokens.then((res) => {
+    const tokenID = res.find(
+      (coin) =>
+        coin.id === input.value.toLowerCase() ||
+        coin.symbol === input.value.toLowerCase()
+    )?.id;
+    if (!tokenID) {
+      markAs(input, "bad");
+    } else {
+      markAs(input, "good");
+    }
+    console.log(tokenID);
+  });
+};
+
+// Adding event listener and calling check function
+for (input of coinsInputArr) {
+  input.addEventListener("input", function (e) {
+    checkToken(this);
+  });
+}
 
 // Render current data on page
 locInput.value = profileSettings.location[0];
