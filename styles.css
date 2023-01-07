@@ -401,6 +401,7 @@ input[type="radio"] + label:hover {
   margin: 2%;
   padding: 2%;
   border-radius: 50px;
+  min-height: 2rem;
 }
 
 .settings__input {

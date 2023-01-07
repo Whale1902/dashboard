@@ -37,10 +37,24 @@ const themePick = function (schema) {
   document.querySelector(":root").style.setProperty("--secondary", schema[1]);
 };
 
-// document.querySelector(".colorTheme").addEventListener("click", function (e) {
-//   e.preventDefault();
-//   themePick(colorSchemas[e.target.id]);
-// });
+document.querySelector(".colorTheme").addEventListener("click", function (e) {
+  const click = e.target?.closest("label");
+  if (!click) return;
+  else {
+    themePick(colorSchemas[click.getAttribute("for")]);
+  }
+});
+
+const colorOptions = document.querySelectorAll(
+  'input[name="colorSchema"] + label'
+);
+
+for (option of colorOptions) {
+  const prim = colorSchemas[option.getAttribute("for")][0];
+  const sec = colorSchemas[option.getAttribute("for")][1];
+
+  option.style.background = `linear-gradient(120deg, ${prim} 50%, ${sec} 0%`;
+}
 
 themePick(colorSchemas[profileSettings.theme]);
 
