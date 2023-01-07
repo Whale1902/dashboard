@@ -11,29 +11,32 @@
   <body>
     <div class="container">
       <div class="widget weather__container">
-        <p class="weather__loc">Odessa, Ukraine</p>
-        <h2 class="weather__temperature">23&#8451;</h2>
+        <p class="weather__loc">?, ?</p>
+        <h2 class="weather__temperature">?</h2>
         <img
           class="weather__icon"
           src="weather_icons/set05/medium/1.png"
           alt=""
           srcset=""
         />
-        <p class="weather__description">Cloudy</p>
+        <p class="weather__description">?</p>
       </div>
       <div class="widget crypto__container"></div>
       <div class="widget search__container">
-        <input
-          id="search__form__input"
-          type="text"
-          placeholder="I want to know..."
-        />
+        <form action="" id="search__form">
+          <input
+            id="search__form__input"
+            type="text"
+            placeholder="I want to know..."
+          />
+        </form>
         <div class="search__options">
           <input
             type="radio"
             name="search__option"
             id="search__option__google"
             data-url="https://www.google.com/search?q="
+            value="google"
             checked="checked"
           />
           <label for="search__option__google">Google</label>
@@ -42,6 +45,7 @@
             name="search__option"
             id="search__option__tiktok"
             data-url="https://www.tiktok.com/search/video?q="
+            value="tiktok"
           />
           <label for="search__option__tiktok">TikTok</label>
           <input
@@ -49,6 +53,7 @@
             name="search__option"
             id="search__option__youtube"
             data-url="https://www.youtube.com/results?search_query="
+            value="youtube"
           />
           <label for="search__option__youtube">YouTube</label>
           <input
@@ -56,6 +61,7 @@
             name="search__option"
             id="search__option__wikipedia"
             data-url="https://en.wikipedia.org/wiki/"
+            value="wikipedia"
           />
           <label for="search__option__wikipedia">Wikipedia</label>
           <input
@@ -63,10 +69,13 @@
             name="search__option"
             id="search__option__reddit"
             data-url="https://www.reddit.com/search?q="
+            value="reddit"
           />
           <label for="search__option__reddit">Reddit</label>
         </div>
-        <button type="button" id="search__form__submit">Search</button>
+        <button type="submit" form="search__form" id="search__form__submit">
+          Search
+        </button>
       </div>
       <div class="widget news__container">
         <div class="news__list"></div>
@@ -77,11 +86,11 @@
           <input
             type="text"
             class="todo__form__input"
-            placeholder="Your next task is..."
+            placeholder="My next task is..."
           />
           <button type="submit" for="todo__form" class="todo__form__btn">
             Add ToDo</button
-          ><button type="button" class="todo__btn">Clear list</button>
+          ><button type="button" class="todo__clear__btn">Clear list</button>
         </form>
       </div>
     </div>
@@ -110,7 +119,7 @@
             id="measurement_us"
             type="radio"
             value="us"
-          /><label for="measurement_imperial">Imperial</label>
+          /><label for="measurement_us">Imperial</label>
         </div>
         <div class="settings__el" data-checked="">
           <label for="coin1">Tokens to track (name or abbreviation): </label>
@@ -123,8 +132,91 @@
           <label for="curr">Currency: </label>
           <input class="settings__input" type="text" id="curr" />
         </div>
+        <div class="settings__el">
+          <label for="">Default search engine: </label>
+          <input
+            name="default__search"
+            class="settings__radio"
+            id="search__engine__google"
+            type="radio"
+            value="google"
+          />
+          <label for="search__engine__google">Google</label>
+          <input
+            name="default__search"
+            class="settings__radio"
+            id="search__engine__tiktok"
+            type="radio"
+            value="tiktok"
+          />
+          <label for="search__engine__tiktok">TikTok</label>
+          <input
+            name="default__search"
+            class="settings__radio"
+            id="search__engine__youtube"
+            type="radio"
+            value="youtube"
+          />
+          <label for="search__engine__youtube">YouTube</label>
+          <input
+            name="default__search"
+            class="settings__radio"
+            id="search__engine__wikipedia"
+            type="radio"
+            value="wikipedia"
+          />
+          <label for="search__engine__wikipedia">Wikipedia</label>
+          <input
+            name="default__search"
+            class="settings__radio"
+            id="search__engine__reddit"
+            type="radio"
+            value="reddit"
+          />
+          <label for="search__engine__reddit">Reddit</label>
+        </div>
+        <div class="settings__el colorTheme">
+          <form action="">
+            <label for="">Color theme: </label>
+            <input
+              type="radio"
+              name="colorSchema"
+              value="colorDefault"
+              id="colorDefault"
+            />
+            <label for="colorDefault">Default</label>
+            <input
+              type="radio"
+              name="colorSchema"
+              value="colorBeige"
+              id="colorBeige"
+            />
+            <label for="colorBeige">Beige</label>
+            <input
+              type="radio"
+              name="colorSchema"
+              value="colorSage"
+              id="colorSage"
+            />
+            <label for="colorSage">Sage</label>
+            <input
+              type="radio"
+              name="colorSchema"
+              value="colorSky"
+              id="colorSky"
+            />
+            <label for="colorSky">Sky</label>
+            <input
+              type="radio"
+              name="colorSchema"
+              value="colorSpace"
+              id="colorSpace"
+            />
+            <label for="colorSpace">Space</label>
+          </form>
+        </div>
       </form>
-      <button class="settings__submit">Save my settings</button>
+      <button class="settings__submit">Save and return</button>
     </div>
     <script src="script.js"></script>
   </body>

@@ -1,7 +1,7 @@
 /************************** GENERAL CSS **************************/
 :root {
-  --primary: #a597e9;
-  --secondary: #74d68e;
+  --primary: #00abb3;
+  --secondary: #eaeaea;
   --background: #ffffff;
   --good: #45fc03;
   --bad: #e77777;
@@ -12,13 +12,13 @@
 }
 
 body {
-  background: var(--background);
   margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
+  /* background-color: #e4e5ec; */
 }
 
 .container {
@@ -28,8 +28,6 @@ body {
   width: 80vw;
   height: 80vh;
   border-radius: 25px;
-  background: linear-gradient(145deg, var(--gray-one), var(--background));
-  box-shadow: 20px 20px 60px var(--gray-two), -20px -20px 60px var(--background);
 }
 
 .widget {
@@ -41,6 +39,7 @@ body {
   justify-content: space-evenly;
   flex-wrap: wrap;
   overflow: hidden;
+  background: #e4e5ec;
   background: var(--primary);
 }
 
@@ -71,6 +70,7 @@ body {
 .weather__icon {
   grid-row-start: 3;
   grid-column-start: 2;
+  justify-self: start;
 }
 
 .weather__description {
@@ -129,10 +129,17 @@ body {
   overflow: hidden;
 }
 
-#search__form__input {
-  display: block;
+#search__form {
   width: 100%;
   height: 33%;
+  margin: 0;
+  align-self: flex-start;
+}
+
+#search__form__input {
+  display: block;
+  width: calc(100% - 32px);
+  height: 100%;
   align-self: flex-start;
   margin: 0;
   padding: 0 15px;
@@ -148,12 +155,12 @@ input[type="radio"] {
 }
 
 input[type="radio"]:checked + label {
-  background-color: var(--secondary);
+  background-color: var(--gray-one);
   cursor: pointer;
 }
 
 input[type="radio"] + label {
-  padding: 2%;
+  padding: 1% 2%;
   border-radius: 25px;
 }
 
@@ -393,7 +400,7 @@ input[type="radio"] + label:hover {
   background-color: var(--secondary);
   margin: 2%;
   padding: 2%;
-  border-radius: 25px;
+  border-radius: 50px;
 }
 
 .settings__input {

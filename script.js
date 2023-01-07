@@ -4,6 +4,8 @@ let profileSettings = {
   measurement: "metric",
   coins: ["bitcoin", "ethereum", "tether"],
   currency: "usd",
+  defaultSearch: "google",
+  theme: "colorBeige",
 };
 
 // Profile settings if user saved his own properties
@@ -16,13 +18,42 @@ if (window.localStorage.length > 0) {
   profileSettings.location[1] = settingsFromLocalStorage.location[1];
   profileSettings.coins = settingsFromLocalStorage.coins;
   profileSettings.currency = settingsFromLocalStorage.currency;
-
-  settingsFromLocalStorage.measurement === "imperial"
-    ? (profileSettings.measurement = "us")
-    : (profileSettings.measurement = "metric");
+  profileSettings.measurement = settingsFromLocalStorage.measurement;
+  profileSettings.defaultSearch = settingsFromLocalStorage.defaultSearch;
+  profileSettings.theme = settingsFromLocalStorage.theme;
 }
 
+// Appearance
+const colorSchemas = {
+  colorDefault: ["#a597e9", "#74d68e"],
+  colorBeige: ["#ece8dd", "#e1d7c6"],
+  colorSage: ["#a6bb8d", "#61876e"],
+  colorSky: ["#bfeaf5", "#82aae3"],
+  colorSpace: ["#00abb3", "#eaeaea"],
+};
+
+const themePick = function (schema) {
+  document.querySelector(":root").style.setProperty("--primary", schema[0]);
+  document.querySelector(":root").style.setProperty("--secondary", schema[1]);
+};
+
+// document.querySelector(".colorTheme").addEventListener("click", function (e) {
+//   e.preventDefault();
+//   themePick(colorSchemas[e.target.id]);
+// });
+
+themePick(colorSchemas[profileSettings.theme]);
+
 /////////////////////////////////////  WEATHER WIDGET  /////////////////////////////////////
+// Helper to know exact time
+const timeNow = function () {
+  const today = new Date();
+  const monthNow = today.toLocaleString("default", {
+    month: "short",
+  });
+  const now = `${monthNow} ${today.getDate()} ${today.getHours()}:${today.getMinutes()}`;
+  return now;
+};
 
 // Weather DOM Selectors
 const weatherLoc = document.querySelector(".weather__loc");
@@ -40,10 +71,16 @@ const updateWeather = function () {
   )
     .then((res) => res.json())
     .then((data) => {
-      weatherLoc.textContent = `${profileSettings.location[0]}, ${profileSettings.location[1]}`;
-      temperature.textContent = `${data.current.temperature}℃`;
+      weatherLoc.textContent = `${profileSettings.location[0]}, ${
+        profileSettings.location[1]
+      }, ${timeNow()}`;
       weatherDescr.textContent = data.current.summary;
       weatherIcon.src = `weather_icons/set05/small/${data.current.icon_num}.png`;
+
+      // Rendering temperature and correct symbol
+      const measurementSymbol =
+        profileSettings.measurement === "metric" ? "\u{2103}" : "\u{2109}";
+      temperature.textContent = `${data.current.temperature}${measurementSymbol}`;
     });
 };
 
@@ -98,6 +135,7 @@ const updateCrypto = function () {
 // DOM Selectors
 let searchInput = document.getElementById("search__form__input");
 const searchSubmit = document.getElementById("search__form__submit");
+const searchForm = document.getElementById("search__form");
 
 // Disable ability to search without any query
 searchSubmit.disabled = true;
@@ -114,7 +152,7 @@ searchInput.addEventListener("input", function () {
   }
 });
 
-searchSubmit.addEventListener("click", function () {
+searchForm.addEventListener("submit", function () {
   // Selecting only checked option
   const searchCheckedOption = document.querySelector(
     'input[name="search__option"]:checked'
@@ -128,6 +166,7 @@ searchSubmit.addEventListener("click", function () {
 
 ////////////////////////////// TODO WIDGET /////////////////////////////
 const todoList = document.querySelector(".todo__list");
+const todoClear = document.querySelector(".todo__clear__btn");
 
 todoList.addEventListener("click", function (e) {
   const clicked = e.target.classList.value;
@@ -162,6 +201,12 @@ todoForm.addEventListener("submit", function (e) {
 
   todoInput.value = "";
   todoInput.focus();
+});
+
+todoClear.addEventListener("click", function () {
+  for (el of document.querySelectorAll(".todo__item")) {
+    el.remove();
+  }
 });
 
 /////////////////////////////////// NEWS WIDGET ///////////////////////////////////
@@ -266,6 +311,8 @@ const tempProfileSettings = {
   measurement: profileSettings.measurement,
   coins: profileSettings.coins,
   currency: profileSettings.currency,
+  defaultSearch: profileSettings.defaultSearch,
+  theme: profileSettings.theme,
 };
 
 // Helper function to mark element as good or bad
@@ -372,6 +419,18 @@ document
   .getElementById(`measurement_${profileSettings.measurement}`)
   .setAttribute("checked", "checked");
 
+for (element of document.querySelectorAll(
+  `input[value=${profileSettings.defaultSearch}]`
+)) {
+  element.setAttribute("checked", "checked");
+}
+
+for (element of document.querySelectorAll(
+  `input[value=${profileSettings.theme}]`
+)) {
+  element.setAttribute("checked", "checked");
+}
+
 // Saving the settings
 const settingsSaveButton = document.querySelector(".settings__submit");
 
@@ -384,10 +443,64 @@ settingsSaveButton.addEventListener("click", function (e) {
     "input[name='measurement']:checked"
   ).value;
 
+  profileSettings.defaultSearch = document.querySelector(
+    "input[name='default__search']:checked"
+  ).value;
+
+  profileSettings.theme = document.querySelector(
+    "input[name='colorSchema']:checked"
+  ).value;
+
   window.localStorage.setItem(
     "profileSettings",
     JSON.stringify(profileSettings)
   );
 
   init();
+
+  themePick(colorSchemas[profileSettings.theme]);
+  toggleElement(settings, "inline-block");
 });
+
+// Rendering todos from local storage NEED TO BE MUCH UPPER ON CODE
+const renderTodosFromLocalStorage = function () {
+  for (todo of document.querySelectorAll(".todo__item")) {
+    todo.remove();
+  }
+
+  const todosFromLocalStorage = JSON.parse(
+    window.localStorage.getItem("todos")
+  );
+
+  for (todo of todosFromLocalStorage) {
+    todoList.insertAdjacentHTML(
+      "beforeend",
+      `
+        <div class="todo__item ${todo[1] === "" ? "" : "todo__item--crossed"}">
+          <p class="todo__text">${todo[0]}</p>
+          <button class="todo__delete">&#9587;</button>
+        </div>
+      `
+    );
+  }
+};
+renderTodosFromLocalStorage();
+
+// Saving todos and its state in local storage before closing or reloading the tab
+const saveTodosToLocalStorage = function () {
+  const currListOfTodos = [];
+
+  const listOfTodos = document.querySelectorAll(".todo__text");
+
+  for (todo of listOfTodos) {
+    if (todo.closest(".todo__item").classList.value.includes("crossed")) {
+      currListOfTodos.push([todo.textContent, "crossed"]);
+    } else {
+      currListOfTodos.push([todo.textContent, ""]);
+    }
+  }
+
+  window.localStorage.setItem("todos", JSON.stringify(currListOfTodos));
+};
+
+window.addEventListener("beforeunload", saveTodosToLocalStorage);
