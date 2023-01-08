@@ -18,7 +18,10 @@ body {
   align-items: center;
   width: 100vw;
   height: 100vh;
-  /* background-color: #e4e5ec; */
+}
+
+input {
+  outline: none;
 }
 
 .container {
@@ -295,15 +298,14 @@ input[type="radio"] + label:hover {
 }
 
 .todo__item--crossed {
-  text-decoration: line-through;
-  text-decoration-thickness: 3px;
-  text-decoration-color: var(--secondary);
   color: var(--gray-three);
   background-color: var(--gray-two);
 }
 
-.todo__item--crossed button {
-  text-decoration: none;
+.todo__item--crossed p {
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--secondary);
 }
 
 .todo__text {
@@ -401,11 +403,11 @@ input[type="radio"] + label:hover {
   margin: 2%;
   padding: 2%;
   border-radius: 50px;
-  min-height: 2rem;
+  box-sizing: border-box;
 }
 
 .settings__input {
-  margin: 0 1%;
+  margin-left: 1%;
   padding: 1%;
   border-radius: 25px;
   border: 3px solid var(--transparent);

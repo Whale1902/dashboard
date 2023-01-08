@@ -337,6 +337,9 @@ const markAs = function (element, mood) {
   } else if (mood === "bad") {
     element.classList.remove("settings__input--good");
     element.classList.add("settings__input--bad");
+  } else if (mood === "neutral") {
+    element.classList.remove("settings__input--good");
+    element.classList.remove("settings__input--bad");
   }
 };
 
@@ -389,41 +392,8 @@ const coin3Input = document.getElementById("coin3");
 const tokenCheckBtn = document.querySelector(".settings__coins__check");
 
 const coinsInputArr = [coin1Input, coin2Input, coin3Input];
-
-/*
-tokenCheckBtn.addEventListener("click", function (e) {
-  e.preventDefault();
-
-  // Request to the CoinGecko API to get list of available tokens
-  fetch("https://api.coingecko.com/api/v3/coins/list")
-    .then((res) => res.json())
-    .then((data) => {
-      for (let i = 0; i < 3; i++) {
-        // if user left empty value we will take placeholder value as user input
-        if (!coinsInputArr[i].value) {
-          coinsInputArr[i].value = coinsInputArr[i].placeholder;
-        }
-
-        // searching api data to check if token exists
-        const tokenID = data.find(
-          (coin) =>
-            coin.id === coinsInputArr[i].value.toLowerCase() ||
-            coin.symbol === coinsInputArr[i].value.toLowerCase()
-        )?.id;
-
-        // pre-saving user input
-        tempProfileSettings.coins[i] = tokenID;
-        // mark input as 'good'
-        coinsInputArr[i].style.border = "3px solid #45fc03";
-
-        // mark input as 'bad'
-        if (!tokenID) coinsInputArr[i].style.border = "3px solid #fc1c03";
-      }
-    });
-});
-*/
-
-// Fetching CoinGecko just once, so that I don't need to call it on every time user fire 'change' or 'input' event
+// Fetching CoinGecko just once, so that I don't need
+// to call it on every time user fire 'change' or 'input' event
 let listOftokens = fetch("https://api.coingecko.com/api/v3/coins/list")
   .then((res) => res.json())
   .catch((err) => console.error(err));
@@ -441,8 +411,8 @@ const checkToken = function (input) {
       markAs(input, "bad");
     } else {
       markAs(input, "good");
+      tempProfileSettings.coins[input.id.slice(4) - 1] = tokenID;
     }
-    console.log(tokenID);
   });
 };
 
@@ -455,10 +425,12 @@ for (input of coinsInputArr) {
 
 // Render current data on page
 locInput.value = profileSettings.location[0];
-currInput.value = profileSettings.currency;
+currInput.value = profileSettings.currency.toLocaleUpperCase();
 
 for (let i = 0; i < 3; i++) {
-  coinsInputArr[i].value = profileSettings.coins[i];
+  coinsInputArr[i].value =
+    profileSettings.coins[i][0].toLocaleUpperCase() +
+    profileSettings.coins[i].slice(1);
 }
 
 document
@@ -503,6 +475,10 @@ settingsSaveButton.addEventListener("click", function (e) {
   );
 
   init();
+
+  for (inp of document.querySelectorAll(".settings__input")) {
+    markAs(inp, "neutral");
+  }
 
   themePick(colorSchemas[profileSettings.theme]);
   toggleElement(settings, "inline-block");
