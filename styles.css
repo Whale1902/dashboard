@@ -18,6 +18,7 @@ body {
   align-items: center;
   width: 100vw;
   height: 100vh;
+  font-family: "Raleway", sans-serif;
 }
 
 input {
@@ -28,7 +29,7 @@ input {
   display: grid;
   grid-template-columns: repeat(4, 25%);
   grid-template-rows: 20% 40% 40%;
-  width: 80vw;
+  width: 70vw;
   height: 80vh;
   border-radius: 25px;
 }
@@ -44,6 +45,7 @@ input {
   overflow: hidden;
   background: #e4e5ec;
   background: var(--primary);
+  border: 1px solid var(--gray-two);
 }
 
 /************************** WEATHER WIDGET **************************/
@@ -53,6 +55,7 @@ input {
   grid-template-rows: 25% 50% 25%;
   justify-items: center;
   align-items: center;
+  font-weight: 200;
 }
 
 .weather__loc {
@@ -89,6 +92,7 @@ input {
   grid-template-rows: repeat(3, 33.3%);
   justify-items: center;
   align-items: center;
+  font-weight: 400;
 }
 
 .crypto__crypto {
@@ -141,13 +145,14 @@ input {
 
 #search__form__input {
   display: block;
-  width: calc(100% - 32px);
+  width: calc(100% - 30px);
   height: 100%;
   align-self: flex-start;
   margin: 0;
   padding: 0 15px;
   border-radius: 25px 25px 0 0;
-  border: 1px solid var(--gray-two);
+  border: 0;
+  border-bottom: 1px solid var(--gray-two);
 }
 
 input[type="radio"] {
@@ -185,7 +190,8 @@ input[type="radio"] + label:hover {
   align-self: flex-end;
   height: 33%;
   border-radius: 0 0 25px 25px;
-  border: 1px solid var(--gray-two);
+  border: 0;
+  border-top: 1px solid var(--gray-two);
   cursor: pointer;
 }
 
@@ -224,7 +230,7 @@ input[type="radio"] + label:hover {
   margin: 0 2%;
   margin-top: 2%;
   background-color: var(--background);
-  border-radius: 25px;
+  border-radius: 50px;
   overflow: hidden;
 }
 
@@ -234,6 +240,7 @@ input[type="radio"] + label:hover {
 
 .news h2 {
   cursor: pointer;
+  font-size: 1.25rem;
 }
 
 .news a {
@@ -249,7 +256,7 @@ input[type="radio"] + label:hover {
 
 .news-more {
   border: 0;
-  border-radius: 25px 25px 0 0;
+  border-radius: 50px 50px 0 0;
   width: 100%;
   padding: 3% 0;
   position: relative;
@@ -263,7 +270,7 @@ input[type="radio"] + label:hover {
   cursor: pointer;
   width: 100%;
   padding: 5% 0;
-  border-radius: 25px;
+  border-radius: 50px;
   transform: translateY(-15%);
 }
 
@@ -369,6 +376,7 @@ input[type="radio"] + label:hover {
   background-color: var(--gray-two);
   cursor: pointer;
 }
+
 /************************** BUTTONS **************************/
 
 .button {
@@ -390,7 +398,7 @@ input[type="radio"] + label:hover {
 
 .settings {
   height: 80vh;
-  width: 80vw;
+  width: 70vw;
   background-color: var(--primary);
   position: absolute;
   margin-right: 30px;
@@ -400,15 +408,19 @@ input[type="radio"] + label:hover {
 
 .settings__el {
   background-color: var(--secondary);
-  margin: 2%;
-  padding: 2%;
+  margin: 1rem;
+  padding: 1rem;
   border-radius: 50px;
   box-sizing: border-box;
 }
 
+.settings form {
+  overflow: scroll;
+}
+
 .settings__input {
   margin-left: 1%;
-  padding: 1%;
+  /* padding: 1%; */
   border-radius: 25px;
   border: 3px solid var(--transparent);
 }

@@ -85,6 +85,7 @@ const updateWeather = function () {
   )
     .then((res) => res.json())
     .then((data) => {
+      console.log(data);
       weatherLoc.textContent = `${profileSettings.location[0]}, ${
         profileSettings.location[1]
       }, ${timeNow()}`;
@@ -107,14 +108,17 @@ const updateCrypto = function () {
 
   for (let i = 0; i < 3; i++) {
     fetch(
-      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${profileSettings.coins[i]}`
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${profileSettings.currency}&ids=${profileSettings.coins[i]}`
     )
       .then((res) => res.json())
       .then((data) => {
         const coinName = data[0].id;
         const coinIcon = data[0].image;
         const coinAbr = data[0].symbol.toUpperCase();
-        const coinPrice = data[0].current_price;
+        const coinPrice = data[0].current_price.toLocaleString("en", {
+          style: "currency",
+          currency: `${profileSettings.currency}`,
+        });
         const coinPriceChange = data[0].price_change_percentage_24h.toFixed(2);
 
         const currMarkup = `
@@ -127,7 +131,7 @@ const updateCrypto = function () {
           <h2 class="crypto__currency">${coinAbr}</h2>
         </div>
         <div class="crypto__rates ${coinName}">
-          <p class="crypto__price">$${coinPrice}</p>
+          <p class="crypto__price">${coinPrice}</p>
           <p class="crypto__price__change">${coinPriceChange}%</p>
         </div>
       `;
@@ -526,3 +530,17 @@ const saveTodosToLocalStorage = function () {
 };
 
 window.addEventListener("beforeunload", saveTodosToLocalStorage);
+
+document.addEventListener("keydown", function (e) {
+  if (e.code === "KeyI" && e.metaKey) {
+    e.preventDefault();
+    console.log("command + I");
+    searchInput.focus();
+  } else if (e.code === "KeyO" && e.metaKey) {
+    e.preventDefault();
+    console.log("command + O");
+    document.querySelector(".todo__form__input").focus();
+  } else if (e.code === "KeyU" && e.metaKey) {
+    init();
+  }
+});
