@@ -1,4 +1,13 @@
-// Profile settings, which will be used before first settings session
+// Available color themes
+const colorSchemas = {
+  colorDefault: ["#a597e9", "#74d68e"],
+  colorBeige: ["#ece8dd", "#e1d7c6"],
+  colorSage: ["#a6bb8d", "#61876e"],
+  colorSky: ["#bfeaf5", "#82aae3"],
+  colorSpace: ["#00abb3", "#eaeaea"],
+};
+
+// Default profile settings
 let profileSettings = {
   location: ["Odessa", "Ukraine"],
   measurement: "metric",
@@ -8,58 +17,19 @@ let profileSettings = {
   theme: "colorBeige",
 };
 
-// Profile settings if user saved his own properties
+// Update profile settings if user's settings available
 if (window.localStorage.length > 0) {
-  const settingsFromLocalStorage = JSON.parse(
-    window.localStorage.getItem("profileSettings")
-  );
-
-  profileSettings.location[0] = settingsFromLocalStorage.location[0];
-  profileSettings.location[1] = settingsFromLocalStorage.location[1];
-  profileSettings.coins = settingsFromLocalStorage.coins;
-  profileSettings.currency = settingsFromLocalStorage.currency;
-  profileSettings.measurement = settingsFromLocalStorage.measurement;
-  profileSettings.defaultSearch = settingsFromLocalStorage.defaultSearch;
-  profileSettings.theme = settingsFromLocalStorage.theme;
+  profileSettings = JSON.parse(window.localStorage.getItem("profileSettings"));
 }
 
-// Appearance
-const colorSchemas = {
-  colorDefault: ["#a597e9", "#74d68e"],
-  colorBeige: ["#ece8dd", "#e1d7c6"],
-  colorSage: ["#a6bb8d", "#61876e"],
-  colorSky: ["#bfeaf5", "#82aae3"],
-  colorSpace: ["#00abb3", "#eaeaea"],
-};
-
+// Apply defined theme from settings
 const themePick = function (schema) {
   document.querySelector(":root").style.setProperty("--primary", schema[0]);
   document.querySelector(":root").style.setProperty("--secondary", schema[1]);
 };
-
-document.querySelector(".colorTheme").addEventListener("click", function (e) {
-  const click = e.target?.closest("label");
-  if (!click) return;
-  else {
-    themePick(colorSchemas[click.getAttribute("for")]);
-  }
-});
-
-const colorOptions = document.querySelectorAll(
-  'input[name="colorSchema"] + label'
-);
-
-for (option of colorOptions) {
-  const prim = colorSchemas[option.getAttribute("for")][0];
-  const sec = colorSchemas[option.getAttribute("for")][1];
-
-  option.style.background = `linear-gradient(120deg, ${prim} 50%, ${sec} 0%`;
-}
-
 themePick(colorSchemas[profileSettings.theme]);
 
-/////////////////////////////////////  WEATHER WIDGET  /////////////////////////////////////
-// Helper to know exact time
+// Get current time
 const timeNow = function () {
   const today = new Date();
   const monthNow = today.toLocaleString("default", {
@@ -69,40 +39,52 @@ const timeNow = function () {
   return now;
 };
 
-// Weather DOM Selectors
+/////////////////////////////////////  WEATHER WIDGET  /////////////////////////////////////
 const weatherLoc = document.querySelector(".weather__loc");
 const temperature = document.querySelector(".weather__temperature");
 const weatherDescr = document.querySelector(".weather__description");
 const weatherIcon = document.querySelector(".weather__icon");
 
-// Weather API Data
-const weatherApiKey = "idctje4bnhbwdwoue45keuwv79h51f2hkz63boy7";
+const WEATHER_API_KEY = "idctje4bnhbwdwoue45keuwv79h51f2hkz63boy7";
 
-// Weather fetch
+// Render location from settings and current time
+weatherLoc.textContent = `${profileSettings.location[0]}, ${
+  profileSettings.location[1]
+}, ${timeNow()}`;
+
+const renderWeather = function (data) {
+  weatherIcon.src = `weather_icons/set05/small/${data.current.icon_num}.png`;
+  weatherDescr.textContent = data.current.summary;
+  temperature.textContent = `${data.current.temperature}${
+    profileSettings.measurement === "metric" ? "\u{2103}" : "\u{2109}"
+  }`;
+};
+
 const updateWeather = function () {
   fetch(
-    `https://www.meteosource.com/api/v1/free/point?place_id=${profileSettings.location[0]}&sections=current&units=${profileSettings.measurement}&key=${weatherApiKey}`
+    `https://www.meteosource.com/api/v1/free/point?place_id=${profileSettings.location[0]}&sections=current&units=${profileSettings.measurement}&key=${WEATHER_API_KEY}`
+  )
+    .then((res) => res.json())
+    .then((data) => renderWeather(data));
+};
+
+/*
+const updateWeather = function () {
+  fetch(
+    `https://www.meteosource.com/api/v1/free/point?place_id=${profileSettings.location[0]}&sections=current&units=${profileSettings.measurement}&key=${WEATHER_API_KEY}`
   )
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
-      weatherLoc.textContent = `${profileSettings.location[0]}, ${
-        profileSettings.location[1]
-      }, ${timeNow()}`;
-      weatherDescr.textContent = data.current.summary;
       weatherIcon.src = `weather_icons/set05/small/${data.current.icon_num}.png`;
-
-      // Rendering temperature and correct symbol
-      const measurementSymbol =
-        profileSettings.measurement === "metric" ? "\u{2103}" : "\u{2109}";
-      temperature.textContent = `${data.current.temperature}${measurementSymbol}`;
+      weatherDescr.textContent = data.current.summary;
+      temperature.textContent = `${data.current.temperature}${
+        profileSettings.measurement === "metric" ? "\u{2103}" : "\u{2109}"
+      }`;
     });
 };
+*/
 
 ////////////////////////////////////// CRYPTO WIDGET  //////////////////////////////////////
-// Currency API Data
-const allCryptos = [];
-
 const updateCrypto = function () {
   const cryptoWidget = document.querySelector(".crypto__container");
 
@@ -353,7 +335,7 @@ const locInput = document.getElementById("loc");
 
 locInput.addEventListener("change", function () {
   fetch(
-    `https://www.meteosource.com/api/v1/free/find_places?text=${locInput.value}&key=${weatherApiKey}`
+    `https://www.meteosource.com/api/v1/free/find_places?text=${locInput.value}&key=${WEATHER_API_KEY}`
   )
     .then((res) => res.json())
     .then((data) => {
@@ -422,10 +404,31 @@ const checkToken = function (input) {
 
 // Adding event listener and calling check function
 for (input of coinsInputArr) {
-  input.addEventListener("input", function (e) {
+  input.addEventListener("input", function () {
     checkToken(this);
   });
 }
+
+// Render theme selectors in their colors
+const colorOptions = document.querySelectorAll(
+  'input[name="colorSchema"] + label'
+);
+
+for (option of colorOptions) {
+  const prim = colorSchemas[option.getAttribute("for")][0];
+  const sec = colorSchemas[option.getAttribute("for")][1];
+
+  option.style.background = `linear-gradient(120deg, ${prim} 50%, ${sec} 0%`;
+}
+
+// Theme preview on seclect
+document.querySelector(".colorTheme").addEventListener("click", function (e) {
+  const click = e.target?.closest("label");
+  if (!click) return;
+  else {
+    themePick(colorSchemas[click.getAttribute("for")]);
+  }
+});
 
 // Render current data on page
 locInput.value = profileSettings.location[0];
@@ -531,6 +534,7 @@ const saveTodosToLocalStorage = function () {
 
 window.addEventListener("beforeunload", saveTodosToLocalStorage);
 
+// Keyboard bindings
 document.addEventListener("keydown", function (e) {
   if (e.code === "KeyI" && e.metaKey) {
     e.preventDefault();
