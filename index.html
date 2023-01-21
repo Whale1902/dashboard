@@ -16,6 +16,7 @@
   </head>
   <body>
     <div class="container">
+      <!------------ Weather widget ------------>
       <div class="widget weather__container">
         <p class="weather__loc"></p>
         <o class="weather__temperature"></o>
@@ -27,13 +28,15 @@
         />
         <p class="weather__description"></p>
       </div>
+      <!------------ Crypto Widget ------------>
       <div class="widget crypto__container"></div>
+      <!------------ Search Widget ------------>
       <div class="widget search__container">
         <form action="" id="search__form">
           <input
             id="search__form__input"
             type="text"
-            placeholder="I want to know..."
+            placeholder="I want to know... (Ctrl/Cmd + I to focus)"
           />
         </form>
         <div class="search__options">
@@ -43,7 +46,6 @@
             id="search__option__google"
             data-url="https://www.google.com/search?q="
             value="google"
-            checked="checked"
           />
           <label for="search__option__google">Google</label>
           <input
@@ -83,16 +85,18 @@
           Search
         </button>
       </div>
+      <!------------ News Widget ------------>
       <div class="widget news__container">
         <div class="news__list"></div>
       </div>
+      <!------------ Todo Widget ------------>
       <div class="widget todo__container">
         <div class="todo__list"></div>
         <form action="" class="todo__form" id="toto__form">
           <input
             type="text"
             class="todo__form__input"
-            placeholder="My next task is..."
+            placeholder="My next task is... (Ctrl/Cmd + O to focus)"
           />
           <button type="submit" for="todo__form" class="todo__form__btn">
             Add ToDo</button
@@ -100,10 +104,13 @@
         </form>
       </div>
     </div>
+    <!------------ Side Buttons ------------>
     <div class="buttons">
       <div class="button button__reload">&#8635;</div>
       <div class="button button__settings">&#9881;</div>
+      <div class="button button__github">G</div>
     </div>
+    <!------------ Settings Tab ------------>
     <div class="settings" style="display: none">
       <form action="">
         <div class="settings__el">

@@ -14,7 +14,7 @@ export const timeNow = function () {
   return now;
 };
 
-// Helper function to show or hide element
+// Sshow or hide element
 // As arguments it takes element and value for the "show" state (Grid, Inline-block or other)
 export const toggleElement = function (element, showValue) {
   if (element.style.display === "none") {

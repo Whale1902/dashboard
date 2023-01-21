@@ -17,6 +17,7 @@ const dom = {
     list: document.querySelector(".todo__list"),
     clearBtn: document.querySelector(".todo__clear__btn"),
     form: document.querySelector(".todo__form"),
+    input: document.querySelector(".todo__form__input"),
   },
   newsWidget: {
     list: document.querySelector(".news__list"),
@@ -31,6 +32,10 @@ const dom = {
     coin1Input: document.getElementById("coin1"),
     coin2Input: document.getElementById("coin2"),
     coin3Input: document.getElementById("coin3"),
+    colorOptions: document.querySelectorAll(
+      'input[name="colorSchema"] + label'
+    ),
+    saveSettingsBtn: document.querySelector(".settings__submit"),
   },
 };
 export default dom;
