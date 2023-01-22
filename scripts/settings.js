@@ -1,4 +1,4 @@
-import { init } from "../script.js";
+import { init } from "../main.js";
 import { toggleElement, markAs, themePick } from "./helpers.js";
 import { WEATHER_API_KEY } from "./config.js";
 import dom from "./dom.js";
@@ -40,18 +40,36 @@ if (window.localStorage.length > 0) {
 // Fetches
 export let listOftokens;
 export const getAvailableTokens = function () {
-  fetch("https://api.coingecko.com/api/v3/coins/list")
-    .then((res) => res.json())
-    .then((data) => (listOftokens = data));
+  try {
+    fetch("https://api.coingecko.com/api/v3/coins/list")
+      .then((res) => {
+        res.json();
+      })
+      .then((data) => {
+        listOftokens = data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 export let listOfVSCurrencies;
 export const getListOfVSCurrencies = function () {
-  fetch("https://api.coingecko.com/api/v3/simple/supported_vs_currencies")
-    .then((res) => res.json())
-    .then((data) => {
-      listOfVSCurrencies = data;
-    });
+  try {
+    fetch("https://api.coingecko.com/api/v3/simple/supported_vs_currencies")
+      .then((res) => res.json())
+      .then((data) => {
+        listOfVSCurrencies = data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 // Render

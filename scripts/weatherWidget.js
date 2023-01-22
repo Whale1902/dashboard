@@ -5,11 +5,18 @@ import { timeNow } from "./helpers.js";
 
 // Fetch
 export const updateWeather = function () {
-  fetch(
-    `https://www.meteosource.com/api/v1/free/point?place_id=${profileSettings.location[0]}&sections=current&units=${profileSettings.measurement}&key=${WEATHER_API_KEY}`
-  )
-    .then((res) => res.json())
-    .then((data) => renderWeather(data));
+  try {
+    fetch(
+      `https://www.meteosource.com/api/v1/free/point?place_id=${profileSettings.location[0]}&sections=current&units=${profileSettings.measurement}&key=${WEATHER_API_KEY}`
+    )
+      .then((res) => res.json())
+      .then((data) => renderWeather(data))
+      .catch((error) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 // Render

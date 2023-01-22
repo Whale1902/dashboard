@@ -2,17 +2,24 @@ import dom from "./dom.js";
 
 // Fetch
 export const fetchNews = function () {
-  fetch("https://forklog.com/wp-json/wp/v2/posts/#")
-    .then((res) => res.json())
-    .then((data) => {
-      for (let i = 0; i < 10; i++) {
-        const title = data[i].title.rendered;
-        const snippet = data[i].excerpt.rendered.slice(3, -5);
-        const link = data[i].link;
+  try {
+    fetch("https://forklog.com/wp-json/wp/v2/posts/#")
+      .then((res) => res.json())
+      .then((data) => {
+        for (let i = 0; i < 10; i++) {
+          const title = data[i].title.rendered;
+          const snippet = data[i].excerpt.rendered.slice(3, -5);
+          const link = data[i].link;
 
-        renderNews(title, snippet, link);
-      }
-    });
+          renderNews(title, snippet, link);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 // Render

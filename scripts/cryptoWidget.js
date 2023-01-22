@@ -3,11 +3,18 @@ import { profileSettings } from "./settings.js";
 
 // Fetch
 export const fetchCrypto = function (i) {
-  fetch(
-    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${profileSettings.currency}&ids=${profileSettings.coins[i]}`
-  )
-    .then((res) => res.json())
-    .then((data) => renderCrypto(data));
+  try {
+    fetch(
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${profileSettings.currency}&ids=${profileSettings.coins[i]}`
+    )
+      .then((res) => res.json())
+      .then((data) => renderCrypto(data))
+      .catch((error) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 // Render
