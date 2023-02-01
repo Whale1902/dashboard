@@ -1,3 +1,5 @@
+import dom from "./scripts/dom.js";
+
 // Available color themes
 const colorSchemas = {
   colorDefault: ["#a597e9", "#74d68e"],
@@ -40,22 +42,17 @@ const timeNow = function () {
 };
 
 /////////////////////////////////////  WEATHER WIDGET  /////////////////////////////////////
-const weatherLoc = document.querySelector(".weather__loc");
-const temperature = document.querySelector(".weather__temperature");
-const weatherDescr = document.querySelector(".weather__description");
-const weatherIcon = document.querySelector(".weather__icon");
-
 const WEATHER_API_KEY = "idctje4bnhbwdwoue45keuwv79h51f2hkz63boy7";
 
 // Render location from settings and current time
-weatherLoc.textContent = `${profileSettings.location[0]}, ${
+dom.weather.location.textContent = `${profileSettings.location[0]}, ${
   profileSettings.location[1]
 }, ${timeNow()}`;
 
 const renderWeather = function (data) {
-  weatherIcon.src = `weather_icons/set05/small/${data.current.icon_num}.png`;
-  weatherDescr.textContent = data.current.summary;
-  temperature.textContent = `${data.current.temperature}${
+  dom.weather.icon.src = `weather_icons/set05/small/${data.current.icon_num}.png`;
+  dom.weather.description.textContent = data.current.summary;
+  dom.weather.temperature.textContent = `${data.current.temperature}${
     profileSettings.measurement === "metric" ? "\u{2103}" : "\u{2109}"
   }`;
 };
@@ -68,26 +65,8 @@ const updateWeather = function () {
     .then((data) => renderWeather(data));
 };
 
-/*
-const updateWeather = function () {
-  fetch(
-    `https://www.meteosource.com/api/v1/free/point?place_id=${profileSettings.location[0]}&sections=current&units=${profileSettings.measurement}&key=${WEATHER_API_KEY}`
-  )
-    .then((res) => res.json())
-    .then((data) => {
-      weatherIcon.src = `weather_icons/set05/small/${data.current.icon_num}.png`;
-      weatherDescr.textContent = data.current.summary;
-      temperature.textContent = `${data.current.temperature}${
-        profileSettings.measurement === "metric" ? "\u{2103}" : "\u{2109}"
-      }`;
-    });
-};
-*/
-
 ////////////////////////////////////// CRYPTO WIDGET  //////////////////////////////////////
 const updateCrypto = function () {
-  const cryptoWidget = document.querySelector(".crypto__container");
-
   for (let i = 0; i < 3; i++) {
     fetch(
       `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${profileSettings.currency}&ids=${profileSettings.coins[i]}`
@@ -118,7 +97,7 @@ const updateCrypto = function () {
         </div>
       `;
 
-        cryptoWidget.insertAdjacentHTML("beforeend", currMarkup);
+        dom.crypto.widget.insertAdjacentHTML("beforeend", currMarkup);
 
         const currentCoin = document.querySelector(`.${coinName}`);
 
@@ -132,43 +111,36 @@ const updateCrypto = function () {
 };
 
 //////////////////////////////////////  SEARCH WIDGET  //////////////////////////////////////
-// DOM Selectors
-let searchInput = document.getElementById("search__form__input");
-const searchSubmit = document.getElementById("search__form__submit");
-const searchForm = document.getElementById("search__form");
-
 // Disable ability to search without any query
-searchSubmit.disabled = true;
+dom.search.submit.disabled = true;
 
 // Allow user to search with at least one character in query
-searchInput.addEventListener("input", function () {
+dom.search.input.addEventListener("input", function () {
   // Global selector has been set on page loading, so I need to update it
-  searchInput = document.getElementById("search__form__input");
+  dom.search.input = document.getElementById("search__form__input");
 
-  if (searchInput.value.length === 0) {
-    searchSubmit.disabled = true;
-  } else if (searchInput.value.length > 0) {
-    searchSubmit.disabled = false;
+  if (dom.search.input.value.length === 0) {
+    dom.search.submit.disabled = true;
+  } else if (dom.search.input.value.length > 0) {
+    dom.search.submit.disabled = false;
   }
 });
 
-searchForm.addEventListener("submit", function () {
+dom.search.form.addEventListener("submit", function (e) {
+  e.preventDefault();
   // Selecting only checked option
   const searchCheckedOption = document.querySelector(
     'input[name="search__option"]:checked'
   );
 
   const targetUrl = `${searchCheckedOption.getAttribute("data-url")}${
-    searchInput.value
+    dom.search.input.value
   }`;
   window.open(targetUrl, "_blank");
 });
 
 ////////////////////////////// TODO WIDGET /////////////////////////////
-const todoList = document.querySelector(".todo__list");
-const todoClear = document.querySelector(".todo__clear__btn");
-
-todoList.addEventListener("click", function (e) {
+dom.todo.list.addEventListener("click", function (e) {
   const clicked = e.target.classList.value;
 
   if (clicked === "todo__list") {
@@ -182,29 +154,26 @@ todoList.addEventListener("click", function (e) {
   }
 });
 
-const todoForm = document.querySelector(".todo__form");
-
-todoForm.addEventListener("submit", function (e) {
+dom.todo.form.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const todoInput = document.querySelector(".todo__form__input");
   const todoMarkup = `
     <div class="todo__item">
-      <p class="todo__text">${todoInput.value}</p>
+      <p class="todo__text">${dom.todo.input.value}</p>
       <button class="todo__delete">&#9587;</button>
     </div>
   `;
 
-  if (!todoInput.value) return;
+  if (!dom.todo.input.value) return;
 
-  todoList.insertAdjacentHTML("beforeend", todoMarkup);
+  dom.todo.list.insertAdjacentHTML("beforeend", todoMarkup);
 
-  todoInput.value = "";
-  todoInput.focus();
+  dom.todo.input.value = "";
+  dom.todo.input.focus();
 });
 
-todoClear.addEventListener("click", function () {
-  for (el of document.querySelectorAll(".todo__item")) {
+dom.todo.clearButton.addEventListener("click", function () {
+  for (let el of document.querySelectorAll(".todo__item")) {
     el.remove();
   }
 });
@@ -228,7 +197,7 @@ const createMarkup = function (heading, snippet, link) {
   </div>
 </div>
 `;
-  newsList.insertAdjacentHTML("beforeend", newsMarkup);
+  dom.news.list.insertAdjacentHTML("beforeend", newsMarkup);
 };
 
 // Fetching
@@ -247,13 +216,7 @@ const newsLoading = function () {
 };
 
 // Display news
-const newsList = document.querySelector(".news__list");
-const newsHeading = document.querySelector(".news-heading");
-const newsSnippet = document.querySelector(".news-snippet");
-const newsBtn = document.querySelector(".news-more");
-const news = document.querySelector(".news");
-
-newsList.addEventListener("click", function (e) {
+dom.news.list.addEventListener("click", function (e) {
   if (!e.target.classList.value === "news-heading") return;
   const clickedNews = e.target.closest(".news");
   clickedNews.querySelector(".news-additional").classList.toggle("hidden");
@@ -268,7 +231,7 @@ const init = function () {
     ...document.querySelectorAll(".news"),
   ];
 
-  for (thing of thingsToRemove) {
+  for (let thing of thingsToRemove) {
     thing.remove();
   }
 
@@ -280,11 +243,6 @@ const init = function () {
 // init();
 
 //////////////////////////////////////  Side Buttons  //////////////////////////////////////
-const sideBtn = document.querySelector(".buttons");
-const settings = document.querySelector(".settings");
-const currentLocation = document.querySelector(".current__location");
-const currentCoins = document.querySelector(".current__coins");
-
 // Helper function to show or hide element
 // As arguments it takes element and value for the "show" state (Grid, Inline-block or other)
 const toggleElement = function (element, showValue) {
@@ -295,11 +253,11 @@ const toggleElement = function (element, showValue) {
   }
 };
 
-sideBtn.addEventListener("click", function (e) {
+dom.sideButtons.buttonsList.addEventListener("click", function (e) {
   if (e.target.classList.value.includes("button__reload")) {
     init();
   } else if (e.target.classList.value.includes("button__settings")) {
-    toggleElement(settings, "inline-block");
+    toggleElement(dom.settings.settingsTab, "inline-block");
   } else return;
 });
 
@@ -330,54 +288,45 @@ const markAs = function (element, mood) {
 };
 
 // USER LOCATION
-// DOM
-const locInput = document.getElementById("loc");
-
-locInput.addEventListener("change", function () {
+dom.settings.locationInput.addEventListener("change", function () {
   fetch(
-    `https://www.meteosource.com/api/v1/free/find_places?text=${locInput.value}&key=${WEATHER_API_KEY}`
+    `https://www.meteosource.com/api/v1/free/find_places?text=${dom.settings.locationInput.value}&key=${WEATHER_API_KEY}`
   )
     .then((res) => res.json())
     .then((data) => {
       if (data.length === 0) {
-        markAs(locInput, "bad");
+        markAs(dom.settings.locationInput, "bad");
       } else if (data.length > 0) {
         tempProfileSettings.location[0] = data[0].name;
         tempProfileSettings.location[1] = data[0].country;
-        markAs(locInput, "good");
+        markAs(dom.settings.locationInput, "good");
       }
     });
 });
 
 // USER CURRENCY
-// DOM Selector
-const currInput = document.getElementById("curr");
-
-currInput.addEventListener("input", function () {
+dom.settings.vsCurrencyInput.addEventListener("input", function () {
   // Asking CG for the list of available currencies
   fetch("https://api.coingecko.com/api/v3/simple/supported_vs_currencies")
     .then((res) => res.json())
     .then((data) => {
-      if (data.includes(currInput.value.toLowerCase())) {
+      if (data.includes(dom.settings.vsCurrencyInput.value.toLowerCase())) {
         // marking input as 'good'
-        markAs(currInput, "good");
-        tempProfileSettings.currency = currInput.value;
+        markAs(dom.settings.vsCurrencyInput, "good");
+        tempProfileSettings.currency = dom.settings.vsCurrencyInput.value;
       } else {
         //marking input as 'bad'
-        markAs(currInput, "bad");
+        markAs(dom.settings.vsCurrencyInput, "bad");
       }
     });
 });
 
 // USER CRYPTO-TOKENS
-// DOM Selectors
-const coin1Input = document.getElementById("coin1");
-const coin2Input = document.getElementById("coin2");
-const coin3Input = document.getElementById("coin3");
-
-const tokenCheckBtn = document.querySelector(".settings__coins__check");
-
-const coinsInputArr = [coin1Input, coin2Input, coin3Input];
+const coinsInputArr = [
+  dom.settings.coin1Input,
+  dom.settings.coin2Input,
+  dom.settings.coin3Input,
+];
 // Fetching CoinGecko just once, so that I don't need
 // to call it on every time user fire 'change' or 'input' event
 let listOftokens = fetch("https://api.coingecko.com/api/v3/coins/list")
@@ -403,18 +352,14 @@ const checkToken = function (input) {
 };
 
 // Adding event listener and calling check function
-for (input of coinsInputArr) {
+for (let input of coinsInputArr) {
   input.addEventListener("input", function () {
     checkToken(this);
   });
 }
 
 // Render theme selectors in their colors
-const colorOptions = document.querySelectorAll(
-  'input[name="colorSchema"] + label'
-);
-
-for (option of colorOptions) {
+for (let option of dom.settings.colorOptions) {
   const prim = colorSchemas[option.getAttribute("for")][0];
   const sec = colorSchemas[option.getAttribute("for")][1];
 
@@ -431,8 +376,9 @@ document.querySelector(".colorTheme").addEventListener("click", function (e) {
 });
 
 // Render current data on page
-locInput.value = profileSettings.location[0];
-currInput.value = profileSettings.currency.toLocaleUpperCase();
+dom.settings.locationInput.value = profileSettings.location[0];
+dom.settings.vsCurrencyInput.value =
+  profileSettings.currency.toLocaleUpperCase();
 
 for (let i = 0; i < 3; i++) {
   coinsInputArr[i].value =
@@ -444,22 +390,20 @@ document
   .getElementById(`measurement_${profileSettings.measurement}`)
   .setAttribute("checked", "checked");
 
-for (element of document.querySelectorAll(
+for (let element of document.querySelectorAll(
   `input[value=${profileSettings.defaultSearch}]`
 )) {
   element.setAttribute("checked", "checked");
 }
 
-for (element of document.querySelectorAll(
+for (let element of document.querySelectorAll(
   `input[value=${profileSettings.theme}]`
 )) {
   element.setAttribute("checked", "checked");
 }
 
 // Saving the settings
-const settingsSaveButton = document.querySelector(".settings__submit");
-
-settingsSaveButton.addEventListener("click", function (e) {
+dom.settings.saveButton.addEventListener("click", function (e) {
   e.preventDefault();
 
   profileSettings = tempProfileSettings;
@@ -483,17 +427,17 @@ settingsSaveButton.addEventListener("click", function (e) {
 
   init();
 
-  for (inp of document.querySelectorAll(".settings__input")) {
+  for (let inp of document.querySelectorAll(".settings__input")) {
     markAs(inp, "neutral");
   }
 
   themePick(colorSchemas[profileSettings.theme]);
-  toggleElement(settings, "inline-block");
+  toggleElement(dom.settings.settingsTab, "inline-block");
 });
 
 // Rendering todos from local storage NEED TO BE MUCH UPPER ON CODE
 const renderTodosFromLocalStorage = function () {
-  for (todo of document.querySelectorAll(".todo__item")) {
+  for (let todo of document.querySelectorAll(".todo__item")) {
     todo.remove();
   }
 
@@ -501,8 +445,8 @@ const renderTodosFromLocalStorage = function () {
     window.localStorage.getItem("todos")
   );
 
-  for (todo of todosFromLocalStorage) {
-    todoList.insertAdjacentHTML(
+  for (let todo of todosFromLocalStorage) {
+    dom.todo.list.insertAdjacentHTML(
       "beforeend",
       `
         <div class="todo__item ${todo[1] === "" ? "" : "todo__item--crossed"}">
@@ -521,7 +465,7 @@ const saveTodosToLocalStorage = function () {
 
   const listOfTodos = document.querySelectorAll(".todo__text");
 
-  for (todo of listOfTodos) {
+  for (let todo of listOfTodos) {
     if (todo.closest(".todo__item").classList.value.includes("crossed")) {
       currListOfTodos.push([todo.textContent, "crossed"]);
     } else {
@@ -539,7 +483,7 @@ document.addEventListener("keydown", function (e) {
   if (e.code === "KeyI" && e.metaKey) {
     e.preventDefault();
     console.log("command + I");
-    searchInput.focus();
+    dom.search.input.focus();
   } else if (e.code === "KeyO" && e.metaKey) {
     e.preventDefault();
     console.log("command + O");
