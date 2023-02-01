@@ -3,13 +3,12 @@
   --primary: #00abb3;
   --secondary: #eaeaea;
   --background: #ffffff;
-  --good: #74d68e;
+  --good: #45fc03;
   --bad: #e77777;
   --transparent: #00000000;
   --gray-one: #e6e6e6;
   --gray-two: #d8d8d8;
   --gray-three: #5d5d5d;
-  --font: "Raleway", sans-serif;
 }
 
 body {
@@ -19,33 +18,11 @@ body {
   align-items: center;
   width: 100vw;
   height: 100vh;
-  font-family: var(--font);
+  font-family: "Raleway", sans-serif;
 }
 
 input {
   outline: none;
-  font-family: var(--font);
-}
-
-::-webkit-input-placeholder {
-  /* Chrome/Opera/Safari */
-  font-family: var(--font);
-}
-::-moz-placeholder {
-  /* Firefox 19+ */
-  font-family: var(--font);
-}
-:-ms-input-placeholder {
-  /* IE 10+ */
-  font-family: var(--font);
-}
-:-moz-placeholder {
-  /* Firefox 18- */
-  font-family: var(--font);
-}
-
-button {
-  font-family: var(--font);
 }
 
 .container {
