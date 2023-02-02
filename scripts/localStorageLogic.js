@@ -42,26 +42,20 @@ export const saveTodosToLocalStorage = function () {
   window.localStorage.setItem("todos", JSON.stringify(currListOfTodos));
 };
 
-export const saveSettingsToLocalStorage = function (
-  profileSettings,
-  tempProfileSettings
-) {
-  profileSettings = tempProfileSettings;
+export const saveSettingsToLocalStorage = function (defSettings, userSettings) {
+  defSettings = userSettings;
 
-  profileSettings.measurement = document.querySelector(
+  defSettings.measurement = document.querySelector(
     "input[name='measurement']:checked"
   ).value;
 
-  profileSettings.defaultSearch = document.querySelector(
+  defSettings.defaultSearch = document.querySelector(
     "input[name='default__search']:checked"
   ).value;
 
-  profileSettings.theme = document.querySelector(
+  defSettings.theme = document.querySelector(
     "input[name='colorSchema']:checked"
   ).value;
 
-  window.localStorage.setItem(
-    "profileSettings",
-    JSON.stringify(profileSettings)
-  );
+  window.localStorage.setItem("profileSettings", JSON.stringify(defSettings));
 };
