@@ -1,15 +1,13 @@
+import { WEATHER_API_KEY, colorSchemas } from "./scripts/config.js";
 import dom from "./scripts/dom.js";
-import WEATHER_API_KEY from "./scripts/config.js";
 import { timeNow, toggleElement, markAs } from "./scripts/helpers.js";
 
-// Available color themes
-const colorSchemas = {
-  colorDefault: ["#a597e9", "#74d68e"],
-  colorBeige: ["#ece8dd", "#e1d7c6"],
-  colorSage: ["#a6bb8d", "#61876e"],
-  colorSky: ["#bfeaf5", "#82aae3"],
-  colorSpace: ["#00abb3", "#eaeaea"],
-};
+import { addTodoLogic, addSearchLogic } from "./scripts/staticWidgetsLogic.js";
+import {
+  renderTodosFromLocalStorage,
+  saveTodosToLocalStorage,
+  saveSettingsToLocalStorage,
+} from "./scripts/localStorageLogic.js";
 
 // Default profile settings
 let profileSettings = {
@@ -21,18 +19,48 @@ let profileSettings = {
   theme: "colorBeige",
 };
 
-// Update profile settings if user's settings available
-if (window.localStorage.length > 0) {
-  profileSettings = JSON.parse(window.localStorage.getItem("profileSettings"));
-}
+//////////////////////// Initial Render ////////////////////////
+
+const renderPage = function () {
+  // Update profile settings if user's settings available
+  if (window.localStorage.length > 0) {
+    profileSettings = JSON.parse(
+      window.localStorage.getItem("profileSettings")
+    );
+  }
+
+  themePick(colorSchemas[profileSettings.theme]);
+
+  // Disable search button by default
+  dom.search.submit.disabled = true;
+
+  renderTodosFromLocalStorage();
+
+  // Keybinds
+  document.addEventListener("keydown", function (e) {
+    keyBinds(e);
+  });
+};
 
 // Apply defined theme from settings
 const themePick = function (schema) {
   document.querySelector(":root").style.setProperty("--primary", schema[0]);
   document.querySelector(":root").style.setProperty("--secondary", schema[1]);
 };
-themePick(colorSchemas[profileSettings.theme]);
 
+const keyBinds = function (e) {
+  if (e.code === "KeyI" && e.metaKey) {
+    e.preventDefault();
+    dom.search.input.focus();
+  } else if (e.code === "KeyO" && e.metaKey) {
+    e.preventDefault();
+    dom.todo.input.focus();
+  } else if (e.code === "KeyU" && e.metaKey) {
+    init();
+  }
+};
+
+renderPage();
 /////////////////////////////////////  WEATHER WIDGET  /////////////////////////////////////
 // Render location from settings and current time
 dom.weather.location.textContent = `${profileSettings.location[0]}, ${
@@ -100,73 +128,9 @@ const updateCrypto = function () {
   }
 };
 
-//////////////////////////////////////  SEARCH WIDGET  //////////////////////////////////////
-// Disable ability to search without any query
-dom.search.submit.disabled = true;
-
-// Allow user to search with at least one character in query
-dom.search.input.addEventListener("input", function () {
-  // Global selector has been set on page loading, so I need to update it
-  dom.search.input = document.getElementById("search__form__input");
-
-  if (dom.search.input.value.length === 0) {
-    dom.search.submit.disabled = true;
-  } else if (dom.search.input.value.length > 0) {
-    dom.search.submit.disabled = false;
-  }
-});
-
-dom.search.form.addEventListener("submit", function (e) {
-  e.preventDefault();
-  // Selecting only checked option
-  const searchCheckedOption = document.querySelector(
-    'input[name="search__option"]:checked'
-  );
-
-  const targetUrl = `${searchCheckedOption.getAttribute("data-url")}${
-    dom.search.input.value
-  }`;
-  window.open(targetUrl, "_blank");
-});
-
-////////////////////////////// TODO WIDGET /////////////////////////////
-dom.todo.list.addEventListener("click", function (e) {
-  const clicked = e.target.classList.value;
-
-  if (clicked === "todo__list") {
-    return;
-  } else if (clicked.includes("delete")) {
-    e.target.closest(".todo__item").remove();
-  } else if (clicked.includes("todo__item")) {
-    e.target.classList.toggle("todo__item--crossed");
-  } else if (!clicked.includes("todo__item")) {
-    e.target.closest(".todo__item").classList.toggle("todo__item--crossed");
-  }
-});
-
-dom.todo.form.addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  const todoMarkup = `
-    <div class="todo__item">
-      <p class="todo__text">${dom.todo.input.value}</p>
-      <button class="todo__delete">&#9587;</button>
-    </div>
-  `;
-
-  if (!dom.todo.input.value) return;
-
-  dom.todo.list.insertAdjacentHTML("beforeend", todoMarkup);
-
-  dom.todo.input.value = "";
-  dom.todo.input.focus();
-});
-
-dom.todo.clearButton.addEventListener("click", function () {
-  for (let el of document.querySelectorAll(".todo__item")) {
-    el.remove();
-  }
-});
+/////////////////////////////////  SEARCH AND TODO WIDGETs  /////////////////////////////////
+addSearchLogic();
+addTodoLogic();
 
 /////////////////////////////////// NEWS WIDGET ///////////////////////////////////
 const createMarkup = function (heading, snippet, link) {
@@ -243,7 +207,7 @@ dom.sideButtons.buttonsList.addEventListener("click", function (e) {
 
 //////////////////////////////////////  SETTINGS TAB  //////////////////////////////////////
 
-// Temporary settings holder, befor it will be inserted into profile settings
+// Temporary settings holder, before it will be inserted into profile settings
 const tempProfileSettings = {
   location: profileSettings.location,
   measurement: profileSettings.measurement,
@@ -372,24 +336,7 @@ for (let element of document.querySelectorAll(
 dom.settings.saveButton.addEventListener("click", function (e) {
   e.preventDefault();
 
-  profileSettings = tempProfileSettings;
-
-  profileSettings.measurement = document.querySelector(
-    "input[name='measurement']:checked"
-  ).value;
-
-  profileSettings.defaultSearch = document.querySelector(
-    "input[name='default__search']:checked"
-  ).value;
-
-  profileSettings.theme = document.querySelector(
-    "input[name='colorSchema']:checked"
-  ).value;
-
-  window.localStorage.setItem(
-    "profileSettings",
-    JSON.stringify(profileSettings)
-  );
+  saveSettingsToLocalStorage(profileSettings, tempProfileSettings);
 
   init();
 
@@ -401,61 +348,4 @@ dom.settings.saveButton.addEventListener("click", function (e) {
   toggleElement(dom.settings.settingsTab, "inline-block");
 });
 
-// Rendering todos from local storage NEED TO BE MUCH UPPER ON CODE
-const renderTodosFromLocalStorage = function () {
-  for (let todo of document.querySelectorAll(".todo__item")) {
-    todo.remove();
-  }
-
-  const todosFromLocalStorage = JSON.parse(
-    window.localStorage.getItem("todos")
-  );
-
-  if (!todosFromLocalStorage) return;
-  for (let todo of todosFromLocalStorage) {
-    dom.todo.list.insertAdjacentHTML(
-      "beforeend",
-      `
-        <div class="todo__item ${todo[1] === "" ? "" : "todo__item--crossed"}">
-          <p class="todo__text">${todo[0]}</p>
-          <button class="todo__delete">&#9587;</button>
-        </div>
-      `
-    );
-  }
-};
-renderTodosFromLocalStorage();
-
-// Saving todos and its state in local storage before closing or reloading the tab
-const saveTodosToLocalStorage = function () {
-  const currListOfTodos = [];
-
-  const listOfTodos = document.querySelectorAll(".todo__text");
-
-  for (let todo of listOfTodos) {
-    if (todo.closest(".todo__item").classList.value.includes("crossed")) {
-      currListOfTodos.push([todo.textContent, "crossed"]);
-    } else {
-      currListOfTodos.push([todo.textContent, ""]);
-    }
-  }
-
-  window.localStorage.setItem("todos", JSON.stringify(currListOfTodos));
-};
-
 window.addEventListener("beforeunload", saveTodosToLocalStorage);
-
-// Keyboard bindings
-document.addEventListener("keydown", function (e) {
-  if (e.code === "KeyI" && e.metaKey) {
-    e.preventDefault();
-    console.log("command + I");
-    dom.search.input.focus();
-  } else if (e.code === "KeyO" && e.metaKey) {
-    e.preventDefault();
-    console.log("command + O");
-    document.querySelector(".todo__form__input").focus();
-  } else if (e.code === "KeyU" && e.metaKey) {
-    init();
-  }
-});
