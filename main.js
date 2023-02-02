@@ -1,4 +1,6 @@
 import dom from "./scripts/dom.js";
+import WEATHER_API_KEY from "./scripts/config.js";
+import { timeNow, toggleElement, markAs } from "./scripts/helpers.js";
 
 // Available color themes
 const colorSchemas = {
@@ -31,19 +33,7 @@ const themePick = function (schema) {
 };
 themePick(colorSchemas[profileSettings.theme]);
 
-// Get current time
-const timeNow = function () {
-  const today = new Date();
-  const monthNow = today.toLocaleString("default", {
-    month: "short",
-  });
-  const now = `${monthNow} ${today.getDate()} ${today.getHours()}:${today.getMinutes()}`;
-  return now;
-};
-
 /////////////////////////////////////  WEATHER WIDGET  /////////////////////////////////////
-const WEATHER_API_KEY = "idctje4bnhbwdwoue45keuwv79h51f2hkz63boy7";
-
 // Render location from settings and current time
 dom.weather.location.textContent = `${profileSettings.location[0]}, ${
   profileSettings.location[1]
@@ -83,19 +73,19 @@ const updateCrypto = function () {
         const coinPriceChange = data[0].price_change_percentage_24h.toFixed(2);
 
         const currMarkup = `
-        <div class="crypto__crypto">
-          <img
-            src="${coinIcon}"
-            alt=""
-            class="crypto__icon"
-          />
-          <h2 class="crypto__currency">${coinAbr}</h2>
-        </div>
-        <div class="crypto__rates ${coinName}">
-          <p class="crypto__price">${coinPrice}</p>
-          <p class="crypto__price__change">${coinPriceChange}%</p>
-        </div>
-      `;
+          <div class="crypto__crypto">
+            <img
+              src="${coinIcon}"
+              alt=""
+              class="crypto__icon"
+            />
+            <h2 class="crypto__currency">${coinAbr}</h2>
+          </div>
+          <div class="crypto__rates ${coinName}">
+            <p class="crypto__price">${coinPrice}</p>
+            <p class="crypto__price__change">${coinPriceChange}%</p>
+          </div>
+        `;
 
         dom.crypto.widget.insertAdjacentHTML("beforeend", currMarkup);
 
@@ -181,22 +171,22 @@ dom.todo.clearButton.addEventListener("click", function () {
 /////////////////////////////////// NEWS WIDGET ///////////////////////////////////
 const createMarkup = function (heading, snippet, link) {
   const newsMarkup = `
-<div class="news">
-  <h2 class="news-heading">
-    ${heading}
-  </h2>
-  <div class="news-additional hidden">
-    <p class="news-snippet">
-      ${snippet}
-    </p>
-    <a
-      href="${link}"
-      target="_blank"
-      ><button class="news-more">Read full</button></a
-    >
-  </div>
-</div>
-`;
+    <div class="news">
+      <h2 class="news-heading">
+        ${heading}
+      </h2>
+      <div class="news-additional hidden">
+        <p class="news-snippet">
+          ${snippet}
+        </p>
+        <a
+          href="${link}"
+          target="_blank"
+          ><button class="news-more">Read full</button></a
+        >
+      </div>
+    </div>
+    `;
   dom.news.list.insertAdjacentHTML("beforeend", newsMarkup);
 };
 
@@ -215,7 +205,7 @@ const newsLoading = function () {
     });
 };
 
-// Display news
+// Expand news on click
 dom.news.list.addEventListener("click", function (e) {
   if (!e.target.classList.value === "news-heading") return;
   const clickedNews = e.target.closest(".news");
@@ -243,16 +233,6 @@ const init = function () {
 // init();
 
 //////////////////////////////////////  Side Buttons  //////////////////////////////////////
-// Helper function to show or hide element
-// As arguments it takes element and value for the "show" state (Grid, Inline-block or other)
-const toggleElement = function (element, showValue) {
-  if (element.style.display === "none") {
-    element.style.display = showValue;
-  } else if (element.style.display === showValue) {
-    element.style.display = "none";
-  }
-};
-
 dom.sideButtons.buttonsList.addEventListener("click", function (e) {
   if (e.target.classList.value.includes("button__reload")) {
     init();
@@ -271,20 +251,6 @@ const tempProfileSettings = {
   currency: profileSettings.currency,
   defaultSearch: profileSettings.defaultSearch,
   theme: profileSettings.theme,
-};
-
-// Helper function to mark element as good or bad
-const markAs = function (element, mood) {
-  if (mood === "good") {
-    element.classList.remove("settings__input--bad");
-    element.classList.add("settings__input--good");
-  } else if (mood === "bad") {
-    element.classList.remove("settings__input--good");
-    element.classList.add("settings__input--bad");
-  } else if (mood === "neutral") {
-    element.classList.remove("settings__input--good");
-    element.classList.remove("settings__input--bad");
-  }
 };
 
 // USER LOCATION
@@ -327,14 +293,14 @@ const coinsInputArr = [
   dom.settings.coin2Input,
   dom.settings.coin3Input,
 ];
+
 // Fetching CoinGecko just once, so that I don't need
-// to call it on every time user fire 'change' or 'input' event
+// to call API every time user fire event
 let listOftokens = fetch("https://api.coingecko.com/api/v3/coins/list")
   .then((res) => res.json())
   .catch((err) => console.error(err));
 
-// Checking if passed input have valid value
-// (if token is listed on CoinGecko)
+// Checking if passed token is listed on CoinGecko
 const checkToken = function (input) {
   listOftokens.then((res) => {
     const tokenID = res.find(
