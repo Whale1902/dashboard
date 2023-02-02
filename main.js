@@ -411,7 +411,7 @@ const renderTodosFromLocalStorage = function () {
     window.localStorage.getItem("todos")
   );
 
-  if (todosFromLocalStorage.length === 0) return;
+  if (!todosFromLocalStorage) return;
   for (let todo of todosFromLocalStorage) {
     dom.todo.list.insertAdjacentHTML(
       "beforeend",
