@@ -23,9 +23,9 @@ let profileSettings = {
 
 const renderPage = function () {
   // Update profile settings if user's settings available
-  if (window.localStorage.length > 0) {
+  if (JSON.parse(window.localStorage.getItem("profileSettings"))) {
     profileSettings = JSON.parse(
-      window.localStorage.getItem("profileSettings")
+      window.localStorage?.getItem("profileSettings")
     );
   }
 
