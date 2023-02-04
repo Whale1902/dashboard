@@ -31,3 +31,35 @@ export const markAs = function (element, mood) {
     element.classList.remove("settings__input--bad");
   }
 };
+
+export const getData = function (url, callback) {
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      callback(data);
+    });
+};
+
+export const getDataAndStoreInSessionStorage = function (url, callback) {
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      saveToSessionStorage(url, [Date.now(), data]);
+    });
+};
+
+const saveToSessionStorage = function (key, value) {
+  window.sessionStorage.setItem(key, JSON.stringify(value));
+};
+
+// Apply defined theme from settings
+export const themePick = function (schema) {
+  document.querySelector(":root").style.setProperty("--primary", schema[0]);
+  document.querySelector(":root").style.setProperty("--secondary", schema[1]);
+};
+
+export const clearWidget = function (widget) {
+  if (widget.innerHTML) {
+    widget.innerHTML = "";
+  }
+};
