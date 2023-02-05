@@ -196,10 +196,14 @@ const coinsInputArr = [
 ];
 
 const renderSettings = function () {
-  getDataAndStoreInSessionStorage(STATIC_URLS.vsCurrencies);
-  getDataAndStoreInSessionStorage(STATIC_URLS.listOfCryptos);
+  // Fetch API data and storing it in sesstion storage
+  getDataAndStoreInSessionStorage(
+    STATIC_URLS.vsCurrencies,
+    dom.settings.vsCurrencyInput
+  );
+  getDataAndStoreInSessionStorage(STATIC_URLS.listOfCryptos, coinsInputArr);
 
-  // Color theme selectors in their colors
+  // "Paint" theme selectors into their colors
   for (let option of dom.settings.colorOptions) {
     const primaryColor = colorSchemas[option.getAttribute("for")][0];
     const secondaryColor = colorSchemas[option.getAttribute("for")][1];
@@ -218,7 +222,6 @@ const renderSettings = function () {
       profileSettings.coins[i].slice(1);
   }
 
-  // Checking selectors according to profile settings
   document
     .getElementById(`measurement_${profileSettings.measurement}`)
     .setAttribute("checked", "checked");
@@ -233,11 +236,10 @@ const renderSettings = function () {
     .querySelector(`input[value=${profileSettings.theme}]`)
     .setAttribute("checked", "checked");
 
-  // Show settings tab
   toggleElement(dom.settings.settingsTab, "inline-block");
 };
 
-// USER LOCATION
+// USER LOCATION SETUP
 const checkUserLocationInput = function (data) {
   if (data.length === 0) {
     markAs(dom.settings.locationInput, "bad");
@@ -252,7 +254,7 @@ dom.settings.locationInput.addEventListener("change", function () {
   getData(DYNAMIC_URLS(profileSettings, "locations"), checkUserLocationInput);
 });
 
-// USER "VS"-CURRENCY
+// USER "VS"-CURRENCY SETUP
 const checkUserVsCurrencyInput = function (data) {
   if (data.includes(dom.settings.vsCurrencyInput.value.toLowerCase())) {
     // marking input as 'good'
@@ -270,7 +272,7 @@ dom.settings.vsCurrencyInput.addEventListener("input", function () {
   );
 });
 
-// USER COINS
+// USER COINS SETUP
 const checkUserCoinInput = function () {
   const currentCoinInput = document.activeElement;
   const listOfCoins = JSON.parse(
@@ -291,14 +293,13 @@ const checkUserCoinInput = function () {
   }
 };
 
-// Adding event listener and calling check function
 for (let input of coinsInputArr) {
   input.addEventListener("input", function () {
     checkUserCoinInput();
   });
 }
 
-// Theme preview on seclect
+// Preview theme on seclect event
 document.querySelector(".colorTheme").addEventListener("click", function (e) {
   const click = e.target?.closest("label");
   if (!click) return;
@@ -311,7 +312,6 @@ document.querySelector(".colorTheme").addEventListener("click", function (e) {
 dom.settings.saveButton.addEventListener("click", function (e) {
   e.preventDefault();
 
-  // A bit janky with this arguments, I just don't want to export-import profile settings
   saveSettingsToLocalStorage(profileSettings, profileSettingsPlaceholder);
 
   init();

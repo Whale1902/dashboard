@@ -6,6 +6,8 @@ export const WEATHER_API_KEY = "idctje4bnhbwdwoue45keuwv79h51f2hkz63boy7";
 // (but can be smaller)
 export const NEWS_ON_PAGE = 10;
 
+export const MILLISECONDS_TO_UPDATE_DATA = 300000;
+
 export const STATIC_URLS = {
   listOfCryptos: "https://api.coingecko.com/api/v3/coins/list",
   vsCurrencies:

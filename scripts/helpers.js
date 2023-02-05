@@ -1,3 +1,5 @@
+import { MILLISECONDS_TO_UPDATE_DATA } from "./config.js";
+
 // Get current time
 export const timeNow = function () {
   const today = new Date();
@@ -18,6 +20,17 @@ export const toggleElement = function (element, showValue) {
   }
 };
 
+// Enable or disable input field or input fields
+const toggleDasabled = function (elements) {
+  if (elements.length > 0) {
+    for (let el of elements) {
+      el.disabled = el.disabled ? false : true;
+    }
+  } else {
+    elements.disabled = elements.disabled ? false : true;
+  }
+};
+
 // Mark element as good or bad by UI
 export const markAs = function (element, mood) {
   if (mood === "good") {
@@ -33,19 +46,49 @@ export const markAs = function (element, mood) {
 };
 
 export const getData = function (url, callback) {
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => {
-      callback(data);
-    });
+  if (isNeedToUpdate(url)) {
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        callback(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } else {
+    return;
+  }
 };
 
-export const getDataAndStoreInSessionStorage = function (url, callback) {
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => {
-      saveToSessionStorage(url, [Date.now(), data]);
-    });
+export const isNeedToUpdate = function (data) {
+  if (!JSON.parse(window.sessionStorage.getItem(data))) return true;
+
+  const now = Date.now();
+  const lastUpdate = JSON.parse(window.sessionStorage.getItem(data))[0];
+  const sinceLastUpdate = now - lastUpdate;
+
+  if (sinceLastUpdate > MILLISECONDS_TO_UPDATE_DATA) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const getDataAndStoreInSessionStorage = function (url, elements) {
+  if (isNeedToUpdate(url)) {
+    toggleDasabled(elements);
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        saveToSessionStorage(url, [Date.now(), data]);
+        toggleDasabled(elements);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } else {
+    return;
+  }
 };
 
 const saveToSessionStorage = function (key, value) {
