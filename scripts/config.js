@@ -1,14 +1,14 @@
 import dom from "./dom.js";
 
-export const WEATHER_API_KEY = "idctje4bnhbwdwoue45keuwv79h51f2hkz63boy7";
+const WEATHER_API_KEY = "idctje4bnhbwdwoue45keuwv79h51f2hkz63boy7";
 
 // Wordpress gives 10 last news, so number can't be larger then 10
 // (but can be smaller)
-export const NEWS_ON_PAGE = 10;
+const NEWS_ON_PAGE = 10;
 
-export const MILLISECONDS_TO_UPDATE_DATA = 300000;
+const MILLISECONDS_TO_UPDATE_DATA = 300000;
 
-export const STATIC_URLS = {
+const STATIC_URLS = {
   listOfCryptos: "https://api.coingecko.com/api/v3/coins/list",
   vsCurrencies:
     "https://api.coingecko.com/api/v3/simple/supported_vs_currencies",
@@ -16,7 +16,7 @@ export const STATIC_URLS = {
 };
 
 // It is ugly, but gives urls, whitch depends on current profile settings
-export const DYNAMIC_URLS = function (profileSettings, widget, i) {
+const DYNAMIC_URLS = function (profileSettings, widget, i) {
   if (widget === "weather") {
     return `https://www.meteosource.com/api/v1/free/point?place_id=${profileSettings.location[0]}&sections=current&units=${profileSettings.measurement}&key=${WEATHER_API_KEY}`;
   } else if (widget === "crypto") {
@@ -27,7 +27,7 @@ export const DYNAMIC_URLS = function (profileSettings, widget, i) {
 };
 
 // Available color themes
-export const colorSchemas = {
+const colorSchemas = {
   colorDefault: ["#a597e9", "#74d68e"],
   colorBeige: ["#ece8dd", "#e1d7c6"],
   colorSage: ["#a6bb8d", "#61876e"],
@@ -35,7 +35,7 @@ export const colorSchemas = {
   colorSpace: ["#00abb3", "#eaeaea"],
 };
 
-export const keyBinds = function (e) {
+const keyBinds = function (e) {
   if (e.code === "KeyI" && e.metaKey) {
     e.preventDefault();
     dom.search.input.focus();
@@ -45,4 +45,14 @@ export const keyBinds = function (e) {
   } else if (e.code === "KeyU" && e.metaKey) {
     init();
   }
+};
+
+export {
+  WEATHER_API_KEY,
+  NEWS_ON_PAGE,
+  MILLISECONDS_TO_UPDATE_DATA,
+  STATIC_URLS,
+  DYNAMIC_URLS,
+  colorSchemas,
+  keyBinds,
 };

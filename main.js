@@ -14,7 +14,7 @@ import {
   getData,
   themePick,
   clearWidget,
-  getDataAndStoreInSessionStorage,
+  getDataAndDisableinput,
 } from "./scripts/helpers.js";
 
 import { addTodoLogic, addSearchLogic } from "./scripts/staticWidgetsLogic.js";
@@ -196,12 +196,12 @@ const coinsInputArr = [
 ];
 
 const renderSettings = function () {
-  // Fetch API data and storing it in sesstion storage
-  getDataAndStoreInSessionStorage(
+  // Fetch API data and store it in sesstion storage
+  getDataAndDisableinput(
     STATIC_URLS.vsCurrencies,
     dom.settings.vsCurrencyInput
   );
-  getDataAndStoreInSessionStorage(STATIC_URLS.listOfCryptos, coinsInputArr);
+  getDataAndDisableinput(STATIC_URLS.listOfCryptos, coinsInputArr);
 
   // "Paint" theme selectors into their colors
   for (let option of dom.settings.colorOptions) {
@@ -314,14 +314,14 @@ dom.settings.saveButton.addEventListener("click", function (e) {
 
   saveSettingsToLocalStorage(profileSettings, profileSettingsPlaceholder);
 
-  init();
-
   for (let inp of document.querySelectorAll(".settings__input")) {
     markAs(inp, "neutral");
   }
 
   renderPage();
   toggleElement(dom.settings.settingsTab, "inline-block");
+
+  init();
 });
 
 window.addEventListener("beforeunload", saveTodosToLocalStorage);

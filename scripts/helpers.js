@@ -46,17 +46,18 @@ export const markAs = function (element, mood) {
 };
 
 export const getData = function (url, callback) {
-  if (isNeedToUpdate(url)) {
+  if (!isNeedToUpdate(url)) {
+    callback(JSON.parse(window.sessionStorage.getItem(url))[1]);
+  } else {
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        callback(data);
+        window.sessionStorage.setItem(url, JSON.stringify([Date.now(), data]));
+        callback(JSON.parse(window.sessionStorage.getItem(url))[1]);
       })
       .catch((error) => {
         console.log(error);
       });
-  } else {
-    return;
   }
 };
 
@@ -74,25 +75,18 @@ export const isNeedToUpdate = function (data) {
   }
 };
 
-export const getDataAndStoreInSessionStorage = function (url, elements) {
-  if (isNeedToUpdate(url)) {
-    toggleDasabled(elements);
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        saveToSessionStorage(url, [Date.now(), data]);
-        toggleDasabled(elements);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  } else {
-    return;
-  }
-};
-
-const saveToSessionStorage = function (key, value) {
-  window.sessionStorage.setItem(key, JSON.stringify(value));
+export const getDataAndDisableinput = function (url, elements) {
+  if (!isNeedToUpdate(url)) return;
+  toggleDasabled(elements);
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      window.sessionStorage.setItem(url, JSON.stringify([Date.now(), data]));
+      toggleDasabled(elements);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 // Apply defined theme from settings

@@ -56,6 +56,8 @@ input {
   justify-items: center;
   align-items: center;
   font-weight: 200;
+  padding: 7px;
+  padding-bottom: 0;
 }
 
 .weather__loc {
