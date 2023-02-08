@@ -100,3 +100,14 @@ export const clearWidget = function (widget) {
     widget.innerHTML = "";
   }
 };
+
+export const renderSpinner = function (element) {
+  element.insertAdjacentHTML(
+    "afterBegin",
+    '<div id="loading" class="loading"></div>'
+  );
+};
+
+export const removeSpinner = function (element) {
+  element.querySelector(".loading").remove();
+};

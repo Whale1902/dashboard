@@ -15,6 +15,8 @@ import {
   themePick,
   clearWidget,
   getDataAndDisableinput,
+  renderSpinner,
+  removeSpinner,
 } from "./scripts/helpers.js";
 
 import { addTodoLogic, addSearchLogic } from "./scripts/staticWidgetsLogic.js";
@@ -33,24 +35,13 @@ let profileSettings = {
   defaultSearch: "google",
   theme: "colorBeige",
 };
-
-// Temporary settings holder, before it will be inserted into profile settings
-const profileSettingsPlaceholder = {
-  location: profileSettings.location,
-  measurement: profileSettings.measurement,
-  coins: profileSettings.coins,
-  currency: profileSettings.currency,
-  defaultSearch: profileSettings.defaultSearch,
-  theme: profileSettings.theme,
-};
-
 //////////////////////// Initial Render ////////////////////////
 
 const renderPage = function () {
   // Update profile settings if user's settings available
   if (JSON.parse(window.localStorage.getItem("profileSettings"))) {
     profileSettings = JSON.parse(
-      window.localStorage?.getItem("profileSettings")
+      window.localStorage.getItem("profileSettings")
     );
   }
 
@@ -71,17 +62,34 @@ const renderPage = function () {
 renderPage();
 /////////////////////////////////////  WEATHER WIDGET  /////////////////////////////////////
 const renderWeather = function (data) {
-  dom.weather.location.textContent = `${profileSettings.location[0]}, ${
+  const location = `${profileSettings.location[0]}, ${
     profileSettings.location[1]
   }, ${timeNow()}`;
-  dom.weather.icon.src = `weather_icons/set05/small/${data.current.icon_num}.png`;
-  dom.weather.description.textContent = data.current.summary;
-  dom.weather.temperature.textContent = `${data.current.temperature}${
+  const iconSrc = `weather_icons/set05/small/${data.current.icon_num}.png`;
+  const description = data.current.summary;
+  const temperature = `${data.current.temperature}${
     profileSettings.measurement === "metric" ? "\u{2103}" : "\u{2109}"
   }`;
+
+  const weatherMarkup = `
+    <p class="weather__loc">${location}</p>
+    <p class="weather__temperature">${temperature}</p>
+    <img
+      class="weather__icon"
+      src="${iconSrc}"
+      alt=""
+      srcset=""
+    />
+    <p class="weather__description">${description}</p>
+    `;
+
+  clearWidget(dom.weather.widget);
+
+  dom.weather.widget.insertAdjacentHTML("afterbegin", weatherMarkup);
 };
 
 const fetchWeather = function () {
+  renderSpinner(dom.weather.widget);
   getData(DYNAMIC_URLS(profileSettings, "weather"), renderWeather);
 };
 
@@ -111,6 +119,10 @@ const renderCrypto = function (data) {
     </div>
   `;
 
+  if (dom.crypto.widget.querySelector(".loading")) {
+    removeSpinner(dom.crypto.widget);
+  }
+
   dom.crypto.widget.insertAdjacentHTML("beforeend", currMarkup);
 
   const currentCoin = document.querySelector(`.${coinName}`);
@@ -123,8 +135,8 @@ const renderCrypto = function (data) {
 };
 
 const fetchCrypto = function () {
-  // Clearing widget in advance, because I need to run this function three times
   clearWidget(dom.crypto.widget);
+  renderSpinner(dom.crypto.widget);
   for (let i = 0; i < 3; i++) {
     getData(DYNAMIC_URLS(profileSettings, "crypto", i), renderCrypto);
   }
@@ -153,9 +165,11 @@ const renderNews = function (data) {
     `;
     dom.news.list.insertAdjacentHTML("beforeend", newsMarkup);
   }
+  removeSpinner(dom.news.widget);
 };
 
 const fetchNews = function () {
+  renderSpinner(dom.news.widget);
   getData(STATIC_URLS.news, renderNews);
 };
 
@@ -188,6 +202,16 @@ dom.sideButtons.buttonsList.addEventListener("click", function (e) {
 });
 
 //////////////////////////////////////  SETTINGS TAB  //////////////////////////////////////
+// Temporary settings holder, before it will be inserted into profile settings
+const profileSettingsPlaceholder = {
+  location: profileSettings.location,
+  measurement: profileSettings.measurement,
+  coins: profileSettings.coins,
+  currency: profileSettings.currency,
+  defaultSearch: profileSettings.defaultSearch,
+  theme: profileSettings.theme,
+};
+
 // USER CRYPTO-TOKENS
 const coinsInputArr = [
   dom.settings.coin1Input,
@@ -319,9 +343,10 @@ dom.settings.saveButton.addEventListener("click", function (e) {
   }
 
   renderPage();
-  toggleElement(dom.settings.settingsTab, "inline-block");
 
   init();
+
+  toggleElement(dom.settings.settingsTab, "inline-block");
 });
 
 window.addEventListener("beforeunload", saveTodosToLocalStorage);

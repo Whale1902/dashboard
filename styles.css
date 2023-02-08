@@ -422,7 +422,6 @@ input[type="radio"] + label:hover {
 
 .settings__input {
   margin-left: 1%;
-  /* padding: 1%; */
   border-radius: 25px;
   border: 3px solid var(--transparent);
 }
@@ -447,4 +446,35 @@ input[type="radio"] + label:hover {
 .settings__submit:hover {
   background-color: var(--secondary);
   cursor: pointer;
+}
+
+/*  */
+
+#loading {
+  display: inline-block;
+  grid-row-start: 1;
+  grid-row-end: -1;
+  grid-column-start: 1;
+  grid-column-end: -1;
+  margin: auto;
+  justify-self: center;
+  align-self: center;
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
 }

@@ -1,5 +1,6 @@
 const dom = {
   weather: {
+    widget: document.querySelector(".weather__container"),
     location: document.querySelector(".weather__loc"),
     temperature: document.querySelector(".weather__temperature"),
     description: document.querySelector(".weather__description"),
@@ -20,6 +21,7 @@ const dom = {
     input: document.querySelector(".todo__form__input"),
   },
   news: {
+    widget: document.querySelector(".news__container"),
     list: document.querySelector(".news__list"),
   },
   sideButtons: {

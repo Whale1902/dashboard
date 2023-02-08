@@ -30,9 +30,9 @@ const DYNAMIC_URLS = function (profileSettings, widget, i) {
 const colorSchemas = {
   colorDefault: ["#a597e9", "#74d68e"],
   colorBeige: ["#ece8dd", "#e1d7c6"],
-  colorSage: ["#a6bb8d", "#61876e"],
-  colorSky: ["#bfeaf5", "#82aae3"],
-  colorSpace: ["#00abb3", "#eaeaea"],
+  colorSage: ["#87bd9a", "#cae1adad"],
+  colorSky: ["#82aae3", "#bfeaf5"],
+  colorSpace: ["#37c9d1", "#f2f0f09c"],
 };
 
 const keyBinds = function (e) {
