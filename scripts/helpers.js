@@ -31,6 +31,16 @@ const toggleDasabled = function (elements) {
   }
 };
 
+const toggleLoadingInputAnimation = function (elements) {
+  if (elements.length > 0) {
+    for (let el of elements) {
+      el.classList.toggle("loading__animation");
+    }
+  } else {
+    elements.classList.toggle("loading__animation");
+  }
+};
+
 // Mark element as good or bad by UI
 export const markAs = function (element, mood) {
   if (mood === "good") {
@@ -78,11 +88,13 @@ export const isNeedToUpdate = function (data) {
 export const getDataAndDisableinput = function (url, elements) {
   if (!isNeedToUpdate(url)) return;
   toggleDasabled(elements);
+  toggleLoadingInputAnimation(elements);
   fetch(url)
     .then((res) => res.json())
     .then((data) => {
       window.sessionStorage.setItem(url, JSON.stringify([Date.now(), data]));
       toggleDasabled(elements);
+      toggleLoadingInputAnimation(elements);
     })
     .catch((error) => {
       console.log(error);
@@ -102,10 +114,7 @@ export const clearWidget = function (widget) {
 };
 
 export const renderSpinner = function (element) {
-  element.insertAdjacentHTML(
-    "afterBegin",
-    '<div id="loading" class="loading"></div>'
-  );
+  element.insertAdjacentHTML("afterBegin", '<div class="loading"></div>');
 };
 
 export const removeSpinner = function (element) {

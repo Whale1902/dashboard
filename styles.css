@@ -450,7 +450,12 @@ input[type="radio"] + label:hover {
 
 /*  */
 
-#loading {
+.loading__container {
+  display: inline-block;
+  size: 10px;
+}
+
+.loading {
   display: inline-block;
   grid-row-start: 1;
   grid-row-end: -1;
@@ -468,6 +473,24 @@ input[type="radio"] + label:hover {
   -webkit-animation: spin 1s ease-in-out infinite;
 }
 
+.loading-sm {
+  display: inline-block;
+  grid-row-start: 1;
+  grid-row-end: -1;
+  grid-column-start: 1;
+  grid-column-end: -1;
+  margin: auto;
+  justify-self: center;
+  align-self: center;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
 @keyframes spin {
   to {
     -webkit-transform: rotate(360deg);
@@ -476,5 +499,110 @@ input[type="radio"] + label:hover {
 @-webkit-keyframes spin {
   to {
     -webkit-transform: rotate(360deg);
+  }
+}
+
+.loading__animation {
+  animation: loading 0.5s infinite alternate;
+}
+
+@keyframes loading {
+  0% {
+    background: linear-gradient(
+      to right,
+      rgba(255, 250, 255, 1) 0%,
+      rgba(230, 230, 230, 1) 0%,
+      rgba(255, 250, 255, 1) 100%
+    );
+  }
+
+  10% {
+    background: linear-gradient(
+      to right,
+      rgba(255, 250, 255, 1) 0%,
+      rgba(230, 230, 230, 1) 10%,
+      rgba(255, 250, 255, 1) 100%
+    );
+  }
+
+  20% {
+    background: linear-gradient(
+      to right,
+      rgba(255, 250, 255, 1) 0%,
+      rgba(230, 230, 230, 1) 20%,
+      rgba(255, 250, 255, 1) 100%
+    );
+  }
+
+  30% {
+    background: linear-gradient(
+      to right,
+      rgba(255, 250, 255, 1) 0%,
+      rgba(230, 230, 230, 1) 30%,
+      rgba(255, 250, 255, 1) 100%
+    );
+  }
+
+  40% {
+    background: linear-gradient(
+      to right,
+      rgba(255, 250, 255, 1) 0%,
+      rgba(230, 230, 230, 1) 40%,
+      rgba(255, 250, 255, 1) 100%
+    );
+  }
+
+  50% {
+    background: linear-gradient(
+      to right,
+      rgba(255, 250, 255, 1) 0%,
+      rgba(230, 230, 230, 1) 50%,
+      rgba(255, 250, 255, 1) 100%
+    );
+  }
+
+  60% {
+    background: linear-gradient(
+      to right,
+      rgba(255, 250, 255, 1) 0%,
+      rgba(230, 230, 230, 1) 60%,
+      rgba(255, 250, 255, 1) 100%
+    );
+  }
+
+  70% {
+    background: linear-gradient(
+      to right,
+      rgba(255, 250, 255, 1) 0%,
+      rgba(230, 230, 230, 1) 70%,
+      rgba(255, 250, 255, 1) 100%
+    );
+  }
+
+  80% {
+    background: linear-gradient(
+      to right,
+      rgba(255, 250, 255, 1) 0%,
+      rgba(230, 230, 230, 1) 80%,
+      rgba(255, 250, 255, 1) 100%
+    );
+  }
+
+  90% {
+    background: linear-gradient(
+      to right,
+      rgba(255, 250, 255, 1) 0%,
+      rgba(230, 230, 230, 1) 90%,
+      rgba(255, 250, 255, 1) 100%
+    );
+  }
+
+  100% {
+    background: linear-gradient(
+      to right,
+      rgba(255, 250, 255, 1) 0%,
+      rgba(230, 230, 230, 1) 100%,
+      rgba(255, 250, 255, 1) 100%
+    );
   }
 }
