@@ -254,7 +254,7 @@ const init = function () {
   fetchNews();
 };
 
-// init();
+init();
 
 //////////////////////////////////////  Side Buttons  //////////////////////////////////////
 dom.sideButtons.buttonsList.addEventListener("click", function (e) {
